@@ -1,5 +1,15 @@
 package devices
 
-abstract class AbstractDevice(id: Int) : Device {
+abstract class AbstractDevice(private val id: Int) : Device {
 
+    override fun equals(other: Any?): Boolean {
+        return when(other) {
+            is AbstractDevice -> id == other.id
+            else -> super.equals(other)
+        }
+    }
+
+    override fun hashCode(): Int {
+        return id
+    }
 }

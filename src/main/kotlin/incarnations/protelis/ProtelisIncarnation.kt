@@ -5,22 +5,25 @@ import org.protelis.lang.ProtelisLoader
 import org.protelis.vm.NetworkManager
 import org.protelis.vm.ProtelisVM
 
-class ProtelisIncarnation(deviceID: Int, moduleName: String) : Incarnation {
+class ProtelisIncarnation(deviceID: IntUID,
+                          moduleName: String,
+                          networkManagerBuilder: (IntUID) -> NetworkManager,
+                          contextBuilder: (IntUID, NetworkManager) -> ProtelisContext = ::SimpleProtelisContext) : Incarnation {
 
     private val vm: ProtelisVM
-    val networkManager: ProtelisNetworkManager
+    val networkManager: NetworkManager
     val context: ProtelisContext
 
     init {
         val program = ProtelisLoader.parse(moduleName)
-        networkManager = ProtelisNetworkManager(IntUID(deviceID))
-        context = ProtelisContext(deviceID, networkManager)
+        networkManager = networkManagerBuilder(deviceID)
+        context = contextBuilder(deviceID, networkManager)
         vm = ProtelisVM(program, context)
     }
 
     override fun execute() = vm.runCycle()
 
     override fun readSensor(name: String): Any {
-        TODO("not implemented")
+        return 0
     }
 }

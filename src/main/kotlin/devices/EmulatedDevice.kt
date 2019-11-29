@@ -1,14 +1,10 @@
 package devices
 
+import incarnations.Incarnation
+
 /**
  * Fully emulated Device
  */
-class EmulatedDevice(id: Int) : AbstractDevice(id) {
-    override fun getSensor(sensorName: String): Any {
-        TODO("not implemented")
-    }
+class EmulatedDevice(id: Int, incarnation: Incarnation) : IncarnatedDevice(id, incarnation) {
 
-    override fun execute() {
-
-    }
 }

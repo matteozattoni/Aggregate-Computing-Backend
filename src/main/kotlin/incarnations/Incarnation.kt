@@ -6,4 +6,5 @@ package incarnations
 interface Incarnation {
     fun readSensor(name: String): Any
 
+    fun execute(): Unit
 }

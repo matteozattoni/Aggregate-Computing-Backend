@@ -22,11 +22,12 @@ internal class ProtelisIncarnationTest {
     init {
         val protelisModuleName = "hello"
         val numDevices = 5
+        val basePort = Backend.communication.port + 100
 
         repeat(numDevices) {
             devices.add(EmulatedDevice(it,
                 ProtelisIncarnation(IntUID(it), protelisModuleName, ::EmulatedNetworkManager, ::HelloContext),
-                Backend.communication.port + 1 + it))
+                basePort + it))
         }
 
         repeat(numDevices) {

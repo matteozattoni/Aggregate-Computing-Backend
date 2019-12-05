@@ -1,8 +1,9 @@
 package devices
 
-abstract class AbstractDevice(private val id: Int) : Device {
+import communication.Communication
 
-    override fun getID(): Int = id
+abstract class AbstractDevice(override val id: Int,
+                              override val communication: Communication) : Device {
 
     override fun equals(other: Any?): Boolean {
         return when(other) {

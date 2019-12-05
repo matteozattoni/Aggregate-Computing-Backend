@@ -24,7 +24,9 @@ internal class ProtelisIncarnationTest {
         val numDevices = 5
 
         repeat(numDevices) {
-            devices.add(EmulatedDevice(it, ProtelisIncarnation(IntUID(it), protelisModuleName, ::EmulatedNetworkManager, ::HelloContext)))
+            devices.add(EmulatedDevice(it,
+                ProtelisIncarnation(IntUID(it), protelisModuleName, ::EmulatedNetworkManager, ::HelloContext),
+                Backend.communication.port + 1 + it))
         }
 
         repeat(numDevices) {

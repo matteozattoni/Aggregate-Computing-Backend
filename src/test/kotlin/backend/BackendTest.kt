@@ -24,7 +24,7 @@ internal class BackendTest {
         assertEquals(Backend.getNeighbours(devices[1]), setOf(devices[0]))
 
         repeat(devices.size) {
-            assertEquals(Backend.getNeighbours(devices[it]), Backend.getNeighbours(devices[it].getID()))
+            assertEquals(Backend.getNeighbours(devices[it]), Backend.getNeighbours(devices[it].id))
         }
     }
 }

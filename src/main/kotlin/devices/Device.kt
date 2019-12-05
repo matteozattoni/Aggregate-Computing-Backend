@@ -1,8 +1,11 @@
 package devices
 
+import communication.Communication
+
 interface Device {
 
-    fun getID(): Int
+    val id: Int
+    val communication: Communication
 
     fun execute()
 

@@ -1,34 +1,32 @@
 package incarnations.protelis
 
 import backend.Backend
+import communication.Message
 import devices.IncarnatedDevice
+import devices.PhysicalDevice
 import org.protelis.lang.datatype.DeviceUID
 import org.protelis.vm.CodePath
 import org.protelis.vm.NetworkManager
 
 class EmulatedNetworkManager(private val uid: IntUID) : NetworkManager {
-    private var messages: Map<DeviceUID, Map<CodePath, Any>> = emptyMap()
+    private val device
+    get () = Backend.devices.single { it.id == uid.getUID() }
 
     private val neighbours
     get() = Backend.getNeighbours(uid.getUID())
 
-    private fun receiveMessage(src: DeviceUID, msg: Map<CodePath, Any>) {
-        messages += Pair(src, msg)
+    @Suppress("UNCHECKED_CAST")
+    override fun getNeighborState(): Map<DeviceUID, Map<CodePath, Any>> {
+        val messages = device.communication.received
+        return messages.map { (IntUID(it.senderUid) as DeviceUID) to (it.content as Map<CodePath, Any>) }.toMap().apply { messages.clear() }
     }
 
-    override fun getNeighborState(): Map<DeviceUID, Map<CodePath, Any>> = messages.apply { messages = emptyMap() }
-
     override fun shareState(toSend: Map<CodePath, Any>) {
+
         if (toSend.isNotEmpty()) {
             neighbours
-                .asSequence()
-                .filterIsInstance<IncarnatedDevice>()
-                .map { it.incarnation }
-                .filterIsInstance<ProtelisIncarnation>()
-                .map { it.networkManager }
-                .filterIsInstance<EmulatedNetworkManager>()
-                .toList()
-                .forEach { it.receiveMessage(uid, toSend) }
+                .map { it.communication }
+                .forEach { device.communication.send(Message(uid.getUID(), toSend), it.address, it.port) }
         }
     }
 }

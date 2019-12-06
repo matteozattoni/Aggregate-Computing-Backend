@@ -23,6 +23,6 @@ if (anyHood(nbr(leader))) {
 	true;
 } else {
 	// Otherwise, stay silent
-	self.announce("No one is leader here");
+	// self.announce("No one is leader here");
 	false;
 };

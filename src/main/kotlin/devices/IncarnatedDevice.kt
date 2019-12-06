@@ -3,12 +3,17 @@ package devices
 import communication.Communication
 import incarnations.Incarnation
 
-abstract class IncarnatedDevice(id: Int,
-                                val incarnation: Incarnation,
-                                communication: Communication): AbstractDevice(id, communication) {
-    override fun getSensor(sensorName: String): Any = incarnation.readSensor(sensorName)
+/**
+ * Device model that uses an Incarnation
+ */
+abstract class IncarnatedDevice(id: Int): AbstractDevice(id), PhysicalDevice {
 
-    override fun execute() {
-        incarnation.execute()
+    lateinit var incarnation: Incarnation
+
+    fun initialize(incarnation: Incarnation, communication: Communication) {
+        this.communication = communication
+        this.incarnation = incarnation
     }
+
+    abstract fun getSensor(sensorName: String): Any
 }

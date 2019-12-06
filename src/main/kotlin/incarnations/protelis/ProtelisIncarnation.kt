@@ -1,14 +1,15 @@
 package incarnations.protelis
 
+import devices.Device
 import incarnations.Incarnation
 import org.protelis.lang.ProtelisLoader
 import org.protelis.vm.NetworkManager
 import org.protelis.vm.ProtelisVM
 
-class ProtelisIncarnation(deviceID: IntUID,
+class ProtelisIncarnation(device: Device,
                           moduleName: String,
-                          networkManagerBuilder: (IntUID) -> NetworkManager,
-                          contextBuilder: (IntUID, NetworkManager) -> ProtelisContext = ::SimpleProtelisContext) : Incarnation {
+                          networkManagerBuilder: (Device) -> NetworkManager,
+                          contextBuilder: (Device, NetworkManager) -> ProtelisContext = ::SimpleProtelisContext) : Incarnation {
 
     private val vm: ProtelisVM
     val networkManager: NetworkManager
@@ -16,8 +17,8 @@ class ProtelisIncarnation(deviceID: IntUID,
 
     init {
         val program = ProtelisLoader.parse(moduleName)
-        networkManager = networkManagerBuilder(deviceID)
-        context = contextBuilder(deviceID, networkManager)
+        networkManager = networkManagerBuilder(device)
+        context = contextBuilder(device, networkManager)
         vm = ProtelisVM(program, context)
     }
 

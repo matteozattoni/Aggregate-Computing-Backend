@@ -12,8 +12,7 @@ import java.nio.channels.Channels
 import java.nio.channels.CompletionHandler
 import kotlin.concurrent.thread
 
-class SocketCommunication(override val address: InetAddress,
-                          override val port: Int): Communication {
+class SocketCommunication(override val device: PhysicalDevice): Communication {
     private var running = false
 
     override var received: MutableSet<Message> = mutableSetOf()
@@ -26,7 +25,7 @@ class SocketCommunication(override val address: InetAddress,
 
     override fun start(onReceive: (Message) -> Unit) {
         val server = AsynchronousServerSocketChannel.open()
-        server.bind(InetSocketAddress(address, port))
+        server.bind(device.getSocketAddress())
         running = true
         server.accept<Any>(null, object : CompletionHandler<AsynchronousSocketChannel, Any> {
             override fun completed(clientChannel: AsynchronousSocketChannel?, attachment: Any?) {

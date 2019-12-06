@@ -5,10 +5,7 @@ import communication.Communication
 interface Device {
 
     val id: Int
-    val communication: Communication
+    var communication: Communication
 
     fun execute()
-
-    fun getSensor(sensorName: String): Any
-
 }

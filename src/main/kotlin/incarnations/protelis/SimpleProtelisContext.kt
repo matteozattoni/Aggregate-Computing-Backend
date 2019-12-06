@@ -1,7 +1,8 @@
 package incarnations.protelis
 
+import devices.Device
 import org.protelis.vm.NetworkManager
 
-class SimpleProtelisContext(private val id: IntUID, networkManager: NetworkManager) : ProtelisContext(id, networkManager) {
-    override fun instance(): ProtelisContext = SimpleProtelisContext(id, networkManager)
+class SimpleProtelisContext(private val device: Device, networkManager: NetworkManager) : ProtelisContext(device, networkManager) {
+    override fun instance(): ProtelisContext = SimpleProtelisContext(device, networkManager)
 }

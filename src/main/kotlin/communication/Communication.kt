@@ -4,8 +4,7 @@ import devices.PhysicalDevice
 import java.net.InetAddress
 
 interface Communication {
-    val address: InetAddress
-    val port: Int
+    val device: PhysicalDevice
 
     var received: MutableSet<Message>
 
@@ -13,4 +12,5 @@ interface Communication {
     fun stop()
 
     fun send(message: Message, address: InetAddress, port: Int)
+    fun sendToDevice(message: Message) = send(message, device.address, device.port)
 }

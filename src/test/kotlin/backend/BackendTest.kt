@@ -2,7 +2,7 @@ package backend
 
 import devices.Device
 import devices.DummyDevice
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 
 internal class BackendTest {
     private val devices = listOf<Device>(
@@ -27,4 +27,11 @@ internal class BackendTest {
             assertEquals(Backend.getNeighbours(devices[it]), Backend.getNeighbours(devices[it].id))
         }
     }
+
+    /*@org.junit.jupiter.api.Test
+    fun socket() {
+        while (true) {
+
+        }
+    }*/
 }

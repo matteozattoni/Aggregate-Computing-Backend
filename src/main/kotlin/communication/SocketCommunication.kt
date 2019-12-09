@@ -1,6 +1,10 @@
 package communication
 
+import backend.Backend
+import devices.EmulatedDevice
 import devices.PhysicalDevice
+import devices.RemoteDevice
+import incarnations.protelis.ProtelisIncarnation
 import java.io.IOException
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
@@ -19,20 +23,34 @@ class SocketCommunication(override val device: PhysicalDevice): Communication {
 
     init {
         start {
-            received.add(it)
+            when (it.type) {
+                MessageType.Join -> {
+                    if (device.address == Backend.address && device.port == Backend.port) {
+                        val address = it.content as InetSocketAddress
+                        println("$address wants to join")
+                        Backend.subscribe(RemoteDevice(Backend.devices.size, address.port, address.address).apply {
+                            communication = SocketCommunication(this)
+                        })
+                    }
+                }
+                else -> received.add(it)
+            }
+
         }
     }
 
     override fun start(onReceive: (Message) -> Unit) {
         val server = AsynchronousServerSocketChannel.open()
         server.bind(device.getSocketAddress())
+        println(device.id.toString() + " started at " + server.localAddress)
         running = true
         server.accept<Any>(null, object : CompletionHandler<AsynchronousSocketChannel, Any> {
             override fun completed(clientChannel: AsynchronousSocketChannel?, attachment: Any?) {
                 if (clientChannel?.isOpen == true) {
                     try {
                         ObjectInputStream(Channels.newInputStream(clientChannel)).use {
-                            onReceive(it.readObject() as Message)
+                            val msg = it.readObject()
+                            onReceive(msg as Message)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()

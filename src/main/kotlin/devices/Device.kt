@@ -1,9 +1,27 @@
 package devices
 
-interface Device {
+import communication.Message
 
+/**
+ * Basic model for all Devices
+ */
+interface Device {
+    /**
+     * The unique identifier of this Device
+     */
+    val id: Int
+
+    /**
+     * Starts executing the program this Device knows
+     */
     fun execute()
 
-    fun getSensor(sensorName: String): Any
-
+    /**
+     * Messages this Device received
+     */
+    var receivedMessages: MutableSet<Message>
+    /**
+     * Tell this Device something
+     */
+    fun tell(message: Message)
 }

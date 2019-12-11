@@ -1,18 +1,28 @@
 package devices
 
-import incarnations.Incarnation
+import communication.Message
+import communication.MessageType
+import communication.SocketCommunication
+import adapters.Adapter
+import java.net.SocketAddress
 
 /**
- * Device that executes locally but reads/writes sensors/actuators on the remotely
+ * Device model that executes locally but reads/writes sensors/actuators remotely
  */
-class LocalExecutionDevice(id: Int, incarnation: Incarnation) : IncarnatedDevice(id, incarnation) {
+class LocalExecutionDevice(id: Int, override val address: SocketAddress, adapterBuilder: (LocalExecutionDevice) -> Adapter) : EmulatedDevice(id), InternetDevice {
+    override val communication = SocketCommunication(this)
+    override val adapter: Adapter = adapterBuilder(this)
 
-    override fun execute() {
+    override fun getSensor(sensorName: String): Any {
+        communication.send(Message(id, MessageType.ReadSensor, sensorName))
+        return 0
+    }
+
+    override fun execute() = adapter.execute()
+
+    override fun tell(message: Message) {
 
     }
 
-    companion object {
-        fun createFromRemote(remote: RemoteDevice): LocalExecutionDevice =
-            LocalExecutionDevice(remote.id, remote.incarnation)
-    }
+    fun goFullWeight() = RemoteDevice(id, address)
 }

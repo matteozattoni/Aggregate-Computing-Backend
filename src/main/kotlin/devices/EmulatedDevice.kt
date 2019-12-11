@@ -1,14 +1,13 @@
 package devices
 
+import adapters.Adapter
+
 /**
- * Fully emulated Device
+ * Emulated Device model, it needs an Incarnation to be able to execute
  */
-class EmulatedDevice(id: Int) : AbstractDevice(id) {
-    override fun getSensor(sensorName: String): Any {
-        TODO("not implemented")
-    }
+abstract class EmulatedDevice(id: Int): AbstractDevice(id) {
 
-    override fun execute() {
+    abstract val adapter: Adapter
 
-    }
+    abstract fun getSensor(sensorName: String): Any
 }

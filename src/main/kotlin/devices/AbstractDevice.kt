@@ -1,6 +1,9 @@
 package devices
 
-abstract class AbstractDevice(private val id: Int) : Device {
+import communication.Message
+
+abstract class AbstractDevice(override val id: Int) : Device {
+    override var receivedMessages: MutableSet<Message> = mutableSetOf()
 
     override fun equals(other: Any?): Boolean {
         return when(other) {

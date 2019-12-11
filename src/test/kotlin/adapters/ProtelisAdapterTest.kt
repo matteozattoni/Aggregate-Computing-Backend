@@ -1,15 +1,15 @@
-package incarnations
+package adapters
 
-import backend.Backend
+import server.Support
 import devices.Device
+import devices.VirtualDevice
 import devices.EmulatedDevice
-import devices.IncarnatedDevice
-import incarnations.protelis.EmulatedNetworkManager
-import incarnations.protelis.ProtelisContext
-import incarnations.protelis.ProtelisIncarnation
+import adapters.protelis.ProtelisNetworkManager
+import adapters.protelis.ProtelisContext
+import adapters.protelis.ProtelisAdapter
 import org.protelis.vm.NetworkManager
 
-internal class ProtelisIncarnationTest {
+internal class ProtelisAdapterTest {
     class HelloContext(private val device: Device, networkManager: NetworkManager) : ProtelisContext(device, networkManager) {
         override fun instance(): ProtelisContext = HelloContext(device, networkManager)
 
@@ -23,25 +23,25 @@ internal class ProtelisIncarnationTest {
         val numDevices = 5
 
         repeat(numDevices) { index ->
-            devices.add(EmulatedDevice(index) {
-                ProtelisIncarnation(it, protelisModuleName, ::EmulatedNetworkManager, ::HelloContext)
+            devices.add(VirtualDevice(index) {
+                ProtelisAdapter(it, protelisModuleName, ::ProtelisNetworkManager, ::HelloContext)
             })
         }
 
         repeat(numDevices) {
-            Backend.subscribe(devices[it], setOf(
+            Support.subscribe(devices[it], setOf(
                 devices[(it + 1) % devices.size],
                 devices[(it - 1 + devices.size) % devices.size]
             ))
         }
 
-        ((devices.first() as IncarnatedDevice).incarnation as ProtelisIncarnation).context.executionEnvironment.put("leader", true)
+        ((devices.first() as EmulatedDevice).adapter as ProtelisAdapter).context.executionEnvironment.put("leader", true)
     }
 
     @org.junit.jupiter.api.Test
     fun executeCycles() {
         repeat(5) {
-            Backend.execute()
+            Support.execute()
         }
     }
 }

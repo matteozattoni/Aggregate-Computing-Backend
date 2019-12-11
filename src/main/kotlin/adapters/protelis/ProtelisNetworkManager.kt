@@ -1,10 +1,9 @@
-package incarnations.protelis
+package adapters.protelis
 
-import backend.Backend
+import server.Support
 import communication.Message
 import communication.MessageType
 import devices.Device
-import devices.InternetDevice
 import org.protelis.lang.datatype.DeviceUID
 import org.protelis.vm.CodePath
 import org.protelis.vm.NetworkManager
@@ -13,9 +12,9 @@ import org.protelis.vm.NetworkManager
  * Protelis wrapper for Devices Communication
  *
  */
-class EmulatedNetworkManager(private val device: Device) : NetworkManager {
+class ProtelisNetworkManager(private val device: Device) : NetworkManager {
     private val neighbours
-    get() = Backend.getNeighbours(device)
+    get() = Support.getNeighbours(device)
 
     /**
      * Receive the state from this Device's neighbours

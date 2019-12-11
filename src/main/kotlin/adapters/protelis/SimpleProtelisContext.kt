@@ -1,4 +1,4 @@
-package incarnations.protelis
+package adapters.protelis
 
 import devices.Device
 import org.protelis.vm.NetworkManager

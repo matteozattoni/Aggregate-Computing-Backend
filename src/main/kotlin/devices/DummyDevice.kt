@@ -1,12 +1,11 @@
 package devices
 
-import backend.Backend
-import communication.Communication
 import communication.Message
-import communication.SocketCommunication
-import java.net.InetAddress
-import java.net.SocketAddress
 
+/**
+ * Fake Device that does nothing
+ * Used mainly for test purposes
+ */
 class DummyDevice(id: Int) : AbstractDevice(id) {
     override fun execute() {
 

@@ -1,4 +1,4 @@
-package incarnations.protelis
+package adapters.protelis
 
 import com.google.common.hash.Hashing
 import devices.Device

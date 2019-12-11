@@ -1,6 +1,5 @@
-package backend
+package server
 
-import communication.Communication
 import communication.Message
 import communication.MessageType
 import communication.SocketCommunication
@@ -13,7 +12,10 @@ import java.net.InetSocketAddress
 import java.net.SocketAddress
 import java.nio.channels.AsynchronousSocketChannel
 
-object Backend : AbstractDevice(-1), InternetDevice {
+/**
+ *
+ */
+object Support : AbstractDevice(-1), InternetDevice {
     private const val port: Int = 20000
     override val address: SocketAddress = InetSocketAddress(port)
     override var communication = SocketCommunication(this)
@@ -30,6 +32,9 @@ object Backend : AbstractDevice(-1), InternetDevice {
     fun getNeighbours(device: Device) = device.neighbours()
     fun getNeighbours(id: Int) = getNeighbours(devices.single { it.id == id })
 
+    /**
+     * Generates a new, unused Device ID
+     */
     private fun generateID(): Int {
         var generated = devices.size
         while (devices.any { it.id == generated })
@@ -49,23 +54,25 @@ object Backend : AbstractDevice(-1), InternetDevice {
 
     }
 
+    private val defaultSocketCallback: (AsynchronousSocketChannel) -> Unit = {
+        val address = it.remoteAddress
+        val message = communication.extractMessage(it)
+        when (message.type) {
+            MessageType.Join -> {
+                val ip = address.toString().trim('/').split(':').first()
+                val port = message.content.toString().toInt()
+                println("$ip wants to join at port $port")
+                val joining = RemoteDevice(generateID(), InetSocketAddress(InetAddress.getByName(ip), port))
+                subscribe(joining)
+                joining.tell(Message(id, MessageType.ID, joining.id))
+            }
+            else -> receivedMessages.add(communication.extractMessage(it))
+        }
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
-        communication.startServer {
-            val address = it.remoteAddress
-            val message = communication.getMessage(it)
-            when (message.type) {
-                MessageType.Join -> {
-                    println("$address wants to join")
-                    val ip = address.toString().trim('/').split(':').first()
-                    val port = message.content.toString().toInt()
-                    val joining = RemoteDevice(generateID(), InetSocketAddress(InetAddress.getByName(ip), port))
-                    subscribe(joining)
-                    joining.tell(Message(id, MessageType.Result, joining.id))
-                }
-                else -> receivedMessages.add(communication.getMessage(it))
-            }
-        }
+        communication.startServer(defaultSocketCallback)
         while (true) {
 
         }

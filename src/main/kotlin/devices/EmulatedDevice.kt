@@ -1,24 +1,13 @@
 package devices
 
-import communication.Communication
-import communication.Message
-import communication.SocketCommunication
-import incarnations.Incarnation
-import java.net.InetAddress
-import java.net.InetSocketAddress
-import java.net.SocketAddress
+import adapters.Adapter
 
 /**
- * Fully emulated Device
+ * Emulated Device model, it needs an Incarnation to be able to execute
  */
-class EmulatedDevice(id: Int, incarnationBuilder: (EmulatedDevice) -> Incarnation) : IncarnatedDevice(id) {
-    override val incarnation: Incarnation = incarnationBuilder(this)
+abstract class EmulatedDevice(id: Int): AbstractDevice(id) {
 
-    override fun getSensor(sensorName: String): Any = incarnation.readSensor(sensorName)
+    abstract val adapter: Adapter
 
-    override fun execute() = incarnation.execute()
-
-    override fun tell(message: Message) {
-        receivedMessages.add(message)
-    }
+    abstract fun getSensor(sensorName: String): Any
 }

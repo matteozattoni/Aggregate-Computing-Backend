@@ -1,15 +1,15 @@
-package incarnations.protelis
+package adapters.protelis
 
 import devices.Device
-import incarnations.Incarnation
+import adapters.Adapter
 import org.protelis.lang.ProtelisLoader
 import org.protelis.vm.NetworkManager
 import org.protelis.vm.ProtelisVM
 
-class ProtelisIncarnation(device: Device,
-                          moduleName: String,
-                          networkManagerBuilder: (Device) -> NetworkManager,
-                          contextBuilder: (Device, NetworkManager) -> ProtelisContext = ::SimpleProtelisContext) : Incarnation {
+class ProtelisAdapter(device: Device,
+                      moduleName: String,
+                      networkManagerBuilder: (Device) -> NetworkManager,
+                      contextBuilder: (Device, NetworkManager) -> ProtelisContext = ::SimpleProtelisContext) : Adapter {
 
     private val vm: ProtelisVM
     private val networkManager: NetworkManager

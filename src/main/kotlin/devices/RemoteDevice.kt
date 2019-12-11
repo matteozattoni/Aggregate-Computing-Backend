@@ -3,7 +3,7 @@ package devices
 import communication.Message
 import communication.MessageType
 import communication.SocketCommunication
-import incarnations.Incarnation
+import adapters.Adapter
 import java.net.SocketAddress
 
 /**
@@ -16,5 +16,5 @@ class RemoteDevice(id: Int, override val address: SocketAddress) : AbstractDevic
 
     override fun tell(message: Message) = communication.send(message)
 
-    fun goLightWeight(incarnationBuilder: (LocalExecutionDevice) -> Incarnation) = LocalExecutionDevice(id, address, incarnationBuilder)
+    fun goLightWeight(adapterBuilder: (LocalExecutionDevice) -> Adapter) = LocalExecutionDevice(id, address, adapterBuilder)
 }

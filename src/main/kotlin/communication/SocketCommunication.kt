@@ -1,14 +1,10 @@
 package communication
 
-import backend.Backend
 import devices.Device
 import devices.InternetDevice
-import devices.RemoteDevice
 import java.io.IOException
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
-import java.net.InetAddress
-import java.net.InetSocketAddress
 import java.nio.channels.AsynchronousServerSocketChannel
 import java.nio.channels.AsynchronousSocketChannel
 import java.nio.channels.Channels
@@ -18,7 +14,7 @@ class SocketCommunication(override val device: Device): Communication<Asynchrono
     private val address = (device as InternetDevice).address
     private var running = false
 
-    override fun getMessage(received: AsynchronousSocketChannel) : Message =
+    override fun extractMessage(received: AsynchronousSocketChannel) : Message =
         ObjectInputStream(Channels.newInputStream(received)).use {
             return it.readObject() as Message
         }
@@ -50,7 +46,7 @@ class SocketCommunication(override val device: Device): Communication<Asynchrono
         })
     }
 
-    override fun stop() {
+    override fun stopServer() {
         running = false
     }
 

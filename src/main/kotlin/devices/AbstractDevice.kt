@@ -1,8 +1,6 @@
 package devices
 
-import communication.Communication
 import communication.Message
-import incarnations.Incarnation
 
 abstract class AbstractDevice(override val id: Int) : Device {
     override var receivedMessages: MutableSet<Message> = mutableSetOf()

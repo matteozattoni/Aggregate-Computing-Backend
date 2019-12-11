@@ -1,4 +1,4 @@
-package incarnations.protelis
+package adapters.protelis
 
 import org.protelis.lang.datatype.DeviceUID
 

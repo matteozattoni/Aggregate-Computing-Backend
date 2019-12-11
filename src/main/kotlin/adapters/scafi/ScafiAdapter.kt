@@ -1,8 +1,8 @@
-package incarnations.scafi
+package adapters.scafi
 
-import incarnations.Incarnation
+import adapters.Adapter
 
-class ScafiIncarnation : Incarnation {
+class ScafiAdapter : Adapter {
     override fun readSensor(name: String): Any {
         return 0
     }

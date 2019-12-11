@@ -6,14 +6,9 @@ import incarnations.Incarnation
 /**
  * Device model that uses an Incarnation
  */
-abstract class IncarnatedDevice(id: Int): AbstractDevice(id), PhysicalDevice {
+abstract class IncarnatedDevice(id: Int): AbstractDevice(id) {
 
-    lateinit var incarnation: Incarnation
-
-    fun initialize(incarnation: Incarnation, communication: Communication) {
-        this.communication = communication
-        this.incarnation = incarnation
-    }
+    abstract val incarnation: Incarnation
 
     abstract fun getSensor(sensorName: String): Any
 }

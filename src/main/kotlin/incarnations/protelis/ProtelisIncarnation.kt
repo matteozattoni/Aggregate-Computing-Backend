@@ -12,7 +12,7 @@ class ProtelisIncarnation(device: Device,
                           contextBuilder: (Device, NetworkManager) -> ProtelisContext = ::SimpleProtelisContext) : Incarnation {
 
     private val vm: ProtelisVM
-    val networkManager: NetworkManager
+    private val networkManager: NetworkManager
     val context: ProtelisContext
 
     init {

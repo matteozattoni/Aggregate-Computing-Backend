@@ -1,10 +1,9 @@
 package communication
 
 import backend.Backend
-import devices.EmulatedDevice
-import devices.PhysicalDevice
+import devices.Device
+import devices.InternetDevice
 import devices.RemoteDevice
-import incarnations.protelis.ProtelisIncarnation
 import java.io.IOException
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
@@ -14,44 +13,26 @@ import java.nio.channels.AsynchronousServerSocketChannel
 import java.nio.channels.AsynchronousSocketChannel
 import java.nio.channels.Channels
 import java.nio.channels.CompletionHandler
-import kotlin.concurrent.thread
 
-class SocketCommunication(override val device: PhysicalDevice): Communication {
+class SocketCommunication(override val device: Device): Communication<AsynchronousSocketChannel> {
+    private val address = (device as InternetDevice).address
     private var running = false
 
-    override var received: MutableSet<Message> = mutableSetOf()
-
-    init {
-        start {
-            when (it.type) {
-                MessageType.Join -> {
-                    if (device.address == Backend.address && device.port == Backend.port) {
-                        val address = it.content as InetSocketAddress
-                        println("$address wants to join")
-                        Backend.subscribe(RemoteDevice(Backend.devices.size, address.port, address.address).apply {
-                            communication = SocketCommunication(this)
-                        })
-                    }
-                }
-                else -> received.add(it)
-            }
-
+    override fun getMessage(received: AsynchronousSocketChannel) : Message =
+        ObjectInputStream(Channels.newInputStream(received)).use {
+            return it.readObject() as Message
         }
-    }
 
-    override fun start(onReceive: (Message) -> Unit) {
+    override fun startServer(onReceive: (AsynchronousSocketChannel) -> Unit) {
         val server = AsynchronousServerSocketChannel.open()
-        server.bind(device.getSocketAddress())
+        server.bind(address)
         println(device.id.toString() + " started at " + server.localAddress)
         running = true
         server.accept<Any>(null, object : CompletionHandler<AsynchronousSocketChannel, Any> {
             override fun completed(clientChannel: AsynchronousSocketChannel?, attachment: Any?) {
                 if (clientChannel?.isOpen == true) {
                     try {
-                        ObjectInputStream(Channels.newInputStream(clientChannel)).use {
-                            val msg = it.readObject()
-                            onReceive(msg as Message)
-                        }
+                        onReceive(clientChannel)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -73,12 +54,13 @@ class SocketCommunication(override val device: PhysicalDevice): Communication {
         running = false
     }
 
-    override fun send(message: Message, address: InetAddress, port: Int) {
+    override fun send(message: Message) {
         var client: AsynchronousSocketChannel? = null
         var stream: ObjectOutputStream? = null
         try {
+            println("$address")
             client = AsynchronousSocketChannel.open()
-            val future = client!!.connect(InetSocketAddress(address, port))
+            val future = client!!.connect(address)
             future.get()
             stream = ObjectOutputStream(Channels.newOutputStream(client))
             stream.writeObject(message)

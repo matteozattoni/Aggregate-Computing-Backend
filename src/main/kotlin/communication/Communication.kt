@@ -1,16 +1,17 @@
 package communication
 
-import devices.PhysicalDevice
+import devices.Device
+import devices.InternetDevice
 import java.net.InetAddress
+import java.net.SocketAddress
 
-interface Communication {
-    val device: PhysicalDevice
+interface Communication<T> {
+    val device: Device
 
-    var received: MutableSet<Message>
+    fun getMessage(received: T) : Message
 
-    fun start(onReceive: (Message) -> Unit)
+    fun startServer(onReceive: (T) -> Unit)
     fun stop()
 
-    fun send(message: Message, address: InetAddress, port: Int)
-    fun sendToDevice(message: Message) = send(message, device.address, device.port)
+    fun send(message: Message)
 }

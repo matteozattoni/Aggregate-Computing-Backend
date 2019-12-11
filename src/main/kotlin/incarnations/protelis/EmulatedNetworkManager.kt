@@ -4,8 +4,7 @@ import backend.Backend
 import communication.Message
 import communication.MessageType
 import devices.Device
-import devices.IncarnatedDevice
-import devices.PhysicalDevice
+import devices.InternetDevice
 import org.protelis.lang.datatype.DeviceUID
 import org.protelis.vm.CodePath
 import org.protelis.vm.NetworkManager
@@ -23,10 +22,10 @@ class EmulatedNetworkManager(private val device: Device) : NetworkManager {
      */
     @Suppress("UNCHECKED_CAST")
     override fun getNeighborState(): Map<DeviceUID, Map<CodePath, Any>> {
-        return device.communication.received
+        return device.receivedMessages
             .map { (IntUID(it.senderUid) as DeviceUID) to (it.content as Map<CodePath, Any>) }
             .toMap()
-            .apply { device.communication.received.clear() }
+            .apply { device.receivedMessages.clear() }
     }
 
     /**
@@ -34,9 +33,7 @@ class EmulatedNetworkManager(private val device: Device) : NetworkManager {
      */
     override fun shareState(toSend: Map<CodePath, Any>) {
         if (toSend.isNotEmpty()) {
-            neighbours
-                .filterIsInstance<PhysicalDevice>()
-                .forEach { device.communication.send(Message(device.id, MessageType.Result, toSend), it.address, it.port) }
+            neighbours.forEach { it.tell(Message(device.id, MessageType.Result, toSend)) }
         }
     }
 }

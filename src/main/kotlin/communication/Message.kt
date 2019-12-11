@@ -1,6 +1,5 @@
 package communication
 
-import devices.PhysicalDevice
 import java.io.Serializable
 
 enum class MessageType { ReadSensor, Execute, Result, Join }

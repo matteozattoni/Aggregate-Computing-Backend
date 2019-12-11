@@ -27,11 +27,4 @@ internal class BackendTest {
             assertEquals(Backend.getNeighbours(devices[it]), Backend.getNeighbours(devices[it].id))
         }
     }
-
-    /*@org.junit.jupiter.api.Test
-    fun socket() {
-        while (true) {
-
-        }
-    }*/
 }

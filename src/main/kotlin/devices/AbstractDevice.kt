@@ -1,11 +1,11 @@
 package devices
 
 import communication.Communication
+import communication.Message
 import incarnations.Incarnation
 
 abstract class AbstractDevice(override val id: Int) : Device {
-
-    override lateinit var communication: Communication
+    override var receivedMessages: MutableSet<Message> = mutableSetOf()
 
     override fun equals(other: Any?): Boolean {
         return when(other) {

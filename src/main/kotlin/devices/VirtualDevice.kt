@@ -2,6 +2,7 @@ package devices
 
 import communication.Message
 import adapters.Adapter
+import communication.MessageType
 
 /**
  * Fully emulated Device
@@ -12,8 +13,4 @@ class VirtualDevice(id: Int, adapterBuilder: (VirtualDevice) -> Adapter) : Emula
     override fun getSensor(sensorName: String): Any = adapter.readSensor(sensorName)
 
     override fun execute() = adapter.execute()
-
-    override fun tell(message: Message) {
-        receivedMessages.add(message)
-    }
 }

@@ -18,7 +18,7 @@ import java.nio.channels.AsynchronousSocketChannel
 object Support : AbstractDevice(-1), InternetDevice {
     private const val port: Int = 20000
     override val address: SocketAddress = InetSocketAddress(port)
-    override var communication = SocketCommunication(this)
+    override var physicalDevice = SocketCommunication(this)
 
     /**
      * Set of devices with their neighbours
@@ -47,7 +47,7 @@ object Support : AbstractDevice(-1), InternetDevice {
     }
 
     override fun execute() {
-        devices.forEach(Device::execute)
+        devices.forEach { it.tell(Message(id, MessageType.Execute))}
     }
 
     override fun tell(message: Message) {
@@ -55,8 +55,9 @@ object Support : AbstractDevice(-1), InternetDevice {
     }
 
     private val defaultSocketCallback: (AsynchronousSocketChannel) -> Unit = {
+        println("received something")
         val address = it.remoteAddress
-        val message = communication.extractMessage(it)
+        val message = physicalDevice.extractMessage(it)
         when (message.type) {
             MessageType.Join -> {
                 val ip = address.toString().trim('/').split(':').first()
@@ -66,13 +67,16 @@ object Support : AbstractDevice(-1), InternetDevice {
                 subscribe(joining)
                 joining.tell(Message(id, MessageType.ID, joining.id))
             }
-            else -> receivedMessages.add(communication.extractMessage(it))
+            MessageType.SendToNeighbours -> getNeighbours(message.senderUid).forEach { n ->
+                n.tell(message.content as Message)
+            }
+            else -> { }
         }
     }
 
     @JvmStatic
     fun main(args: Array<String>) {
-        communication.startServer(defaultSocketCallback)
+        physicalDevice.startServer(defaultSocketCallback)
         while (true) {
 
         }

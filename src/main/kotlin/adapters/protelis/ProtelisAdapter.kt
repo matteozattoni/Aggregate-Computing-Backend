@@ -8,8 +8,8 @@ import org.protelis.vm.ProtelisVM
 
 class ProtelisAdapter(device: Device,
                       moduleName: String,
-                      networkManagerBuilder: (Device) -> NetworkManager,
-                      contextBuilder: (Device, NetworkManager) -> ProtelisContext = ::SimpleProtelisContext) : Adapter {
+                      contextBuilder: (Device, NetworkManager) -> ProtelisContext = ::SimpleProtelisContext,
+                      networkManagerBuilder: (Device) -> NetworkManager = ::ProtelisNetworkManager) : Adapter {
 
     private val vm: ProtelisVM
     private val networkManager: NetworkManager

@@ -1,9 +1,18 @@
 package devices
 
 import communication.Message
+import communication.MessageType
 
 abstract class AbstractDevice(override val id: Int) : Device {
-    override var receivedMessages: MutableSet<Message> = mutableSetOf()
+    override var status: MutableSet<Message> = mutableSetOf()
+
+    override fun tell(message: Message) {
+        when(message.type){
+            MessageType.Status -> status.add(message)
+            MessageType.Execute -> execute()
+            else -> { }
+        }
+    }
 
     override fun equals(other: Any?): Boolean {
         return when(other) {

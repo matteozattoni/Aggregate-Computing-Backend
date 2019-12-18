@@ -10,11 +10,21 @@ import java.net.SocketAddress
  * Device model that does everything remotely
  */
 class RemoteDevice(id: Int, override val address: SocketAddress) : AbstractDevice(id), InternetDevice {
-    override val communication = SocketCommunication(this)
+    override val physicalDevice = SocketCommunication(this)
 
-    override fun execute() = communication.send(Message(id, MessageType.Execute))
+    override fun execute() = physicalDevice.send(Message(id, MessageType.Execute))
 
-    override fun tell(message: Message) = communication.send(message)
+    /**
+     * The Status is maintained both here in the model and sent to the physical device
+     * Maintaining the status in the model is useful to avoid unnecessary communications
+     */
+    override fun tell(message: Message) {
+        super.tell(message)
+        when(message.type){
+            MessageType.Status, MessageType.ID -> { physicalDevice.send(message) }
+            else -> { }
+        }
+    }
 
     fun goLightWeight(adapterBuilder: (LocalExecutionDevice) -> Adapter) = LocalExecutionDevice(id, address, adapterBuilder)
 }

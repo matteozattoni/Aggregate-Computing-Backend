@@ -19,7 +19,8 @@ interface Device {
     /**
      * Messages this Device received
      */
-    var receivedMessages: MutableSet<Message>
+    var status: MutableSet<Message>
+
     /**
      * Tell this Device something
      */

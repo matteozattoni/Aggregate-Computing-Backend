@@ -24,7 +24,7 @@ internal class ProtelisAdapterTest {
 
         repeat(numDevices) { index ->
             devices.add(VirtualDevice(index) {
-                ProtelisAdapter(it, protelisModuleName, ::ProtelisNetworkManager, ::HelloContext)
+                ProtelisAdapter(it, protelisModuleName, ::HelloContext)
             })
         }
 

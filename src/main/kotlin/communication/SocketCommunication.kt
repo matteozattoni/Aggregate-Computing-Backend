@@ -10,8 +10,8 @@ import java.nio.channels.AsynchronousSocketChannel
 import java.nio.channels.Channels
 import java.nio.channels.CompletionHandler
 
-class SocketCommunication(override val device: Device): Communication<AsynchronousSocketChannel> {
-    private val address = (device as InternetDevice).address
+class SocketCommunication(override val device: InternetDevice): Communication<AsynchronousSocketChannel> {
+    private val address = device.address
     private var running = false
 
     override fun extractMessage(received: AsynchronousSocketChannel) : Message =

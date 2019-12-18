@@ -11,5 +11,5 @@ import java.net.SocketAddress
 interface InternetDevice : Device {
     val address: SocketAddress
 
-    val communication: Communication<*>
+    val physicalDevice: Communication<*>
 }

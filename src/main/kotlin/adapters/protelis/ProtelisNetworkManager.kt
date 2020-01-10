@@ -13,7 +13,7 @@ import org.protelis.vm.NetworkManager
  */
 class ProtelisNetworkManager(private val device: Device) : NetworkManager {
     private val neighbours
-    get() = Support.getNeighbours(device)
+    get() = Support.devices.getNeighbours(device)
 
     /**
      * Receive the status from this Device's neighbours

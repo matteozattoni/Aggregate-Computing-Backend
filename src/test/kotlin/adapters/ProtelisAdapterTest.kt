@@ -8,6 +8,7 @@ import adapters.protelis.ProtelisNetworkManager
 import adapters.protelis.ProtelisContext
 import adapters.protelis.ProtelisAdapter
 import org.protelis.vm.NetworkManager
+import server.Topology
 
 internal class ProtelisAdapterTest {
     class HelloContext(private val device: Device, networkManager: NetworkManager) : ProtelisContext(device, networkManager) {
@@ -16,26 +17,20 @@ internal class ProtelisAdapterTest {
         fun announce(something: String) = println("${device.id} - $something")
     }
 
-    private var devices: MutableList<Device> = mutableListOf()
-
     init {
         val protelisModuleName = "hello"
         val numDevices = 5
 
-        repeat(numDevices) { index ->
-            devices.add(VirtualDevice(index) {
-                ProtelisAdapter(it, protelisModuleName, ::HelloContext)
-            })
+        repeat(numDevices) { _ ->
+            Support.devices.createAndAddDevice { id ->
+                VirtualDevice(id) { ProtelisAdapter(it, protelisModuleName, ::HelloContext) }
+            }
         }
 
-        repeat(numDevices) {
-            Support.subscribe(devices[it], setOf(
-                devices[(it + 1) % devices.size],
-                devices[(it - 1 + devices.size) % devices.size]
-            ))
-        }
+        Support.devices.finalize(Topology.Ring)
 
-        ((devices.first() as EmulatedDevice).adapter as ProtelisAdapter).context.executionEnvironment.put("leader", true)
+        ((Support.devices.getDevices().first() as EmulatedDevice).adapter as ProtelisAdapter)
+            .context.executionEnvironment.put("leader", true)
     }
 
     @org.junit.jupiter.api.Test

@@ -21,9 +21,9 @@ internal class ProtelisAdapterTest {
         val protelisModuleName = "hello"
         val numDevices = 5
 
-        repeat(numDevices) { _ ->
+        repeat(numDevices) {
             Support.devices.createAndAddDevice { id ->
-                VirtualDevice(id) { ProtelisAdapter(it, protelisModuleName, ::HelloContext) }
+                VirtualDevice(id).apply { adapter = ProtelisAdapter(this, protelisModuleName, ::HelloContext) }
             }
         }
 

@@ -7,7 +7,7 @@ import communication.Message
  * Emulated Device model, it needs an Adapter to be able to execute
  */
 abstract class EmulatedDevice(id: Int): AbstractDevice(id) {
-    abstract val adapter: Adapter
+    var adapter: Adapter? = null
 
     abstract fun getSensor(sensorName: String): Any
 }

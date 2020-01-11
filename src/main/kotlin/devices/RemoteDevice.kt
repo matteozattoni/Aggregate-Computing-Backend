@@ -26,5 +26,5 @@ class RemoteDevice(id: Int, override val address: SocketAddress) : AbstractDevic
         }
     }
 
-    fun goLightWeight(adapterBuilder: (LocalExecutionDevice) -> Adapter) = LocalExecutionDevice(id, address, adapterBuilder)
+    fun goLightWeight(a: Adapter) = LocalExecutionDevice(id, address).apply { adapter = a }
 }

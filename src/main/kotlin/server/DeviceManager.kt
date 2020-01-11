@@ -21,10 +21,10 @@ class DeviceManager {
         return generated
     }
 
-    fun finalizeIfNecessary(topology: Topology = Topology.Line) {
+    /*fun finalizeIfNecessary(topology: Topology = Topology.Line) {
         if (!finalized)
             finalize(topology)
-    }
+    }*/
 
     /**
      * Cuts the possibility to add new devices and sets the neighbours of each Device based on the chosen Topology

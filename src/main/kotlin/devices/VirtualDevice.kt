@@ -7,10 +7,8 @@ import communication.MessageType
 /**
  * Fully emulated Device
  */
-class VirtualDevice(id: Int, adapterBuilder: (VirtualDevice) -> Adapter) : EmulatedDevice(id) {
-    override val adapter: Adapter = adapterBuilder(this)
+class VirtualDevice(id: Int) : EmulatedDevice(id) {
+    override fun getSensor(sensorName: String): Any = adapter!!.readSensor(sensorName)
 
-    override fun getSensor(sensorName: String): Any = adapter.readSensor(sensorName)
-
-    override fun execute() = adapter.execute()
+    override fun execute() = adapter!!.execute()
 }

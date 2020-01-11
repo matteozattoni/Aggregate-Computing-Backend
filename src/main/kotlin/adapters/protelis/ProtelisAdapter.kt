@@ -6,7 +6,7 @@ import org.protelis.lang.ProtelisLoader
 import org.protelis.vm.NetworkManager
 import org.protelis.vm.ProtelisVM
 
-class ProtelisAdapter(device: Device,
+class ProtelisAdapter(override val device: Device,
                       moduleName: String,
                       contextBuilder: (Device, NetworkManager) -> ProtelisContext = ::SimpleProtelisContext,
                       networkManagerBuilder: (Device) -> NetworkManager = ::ProtelisNetworkManager) : Adapter {

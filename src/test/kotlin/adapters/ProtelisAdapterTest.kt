@@ -18,6 +18,9 @@ internal class ProtelisAdapterTest {
     }
 
     init {
+        //useful to not make adapter tests interact with each other
+        Support.devices.reset()
+
         val protelisModuleName = "hello"
         val numDevices = 5
 

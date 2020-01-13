@@ -21,6 +21,12 @@ class DeviceManager {
         return generated
     }
 
+    fun reset() {
+        devices.clear()
+        neighbours.clear()
+        finalized = false
+    }
+
     /*fun finalizeIfNecessary(topology: Topology = Topology.Line) {
         if (!finalized)
             finalize(topology)

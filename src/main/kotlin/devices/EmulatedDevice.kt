@@ -8,6 +8,4 @@ import communication.Message
  */
 abstract class EmulatedDevice(id: Int): AbstractDevice(id) {
     var adapter: Adapter? = null
-
-    abstract fun getSensor(sensorName: String): Any
 }

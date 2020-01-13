@@ -79,18 +79,21 @@ class DeviceManager {
 
     fun getDevices(): List<Device> = devices.toList()
 
-    fun getNeighbours(deviceID: Int): Set<Device> {
+    fun getNeighbours(deviceID: Int, selfIncluded: Boolean = false): Set<Device> {
         val device = devices.firstOrNull{it.id == deviceID}
         return if (device != null)
-            getNeighbours(device)
+            getNeighbours(device, selfIncluded)
         else
             emptySet()
     }
-    fun getNeighbours(device: Device): Set<Device> {
+    fun getNeighbours(device: Device, selfIncluded: Boolean = false): Set<Device> {
         if (!finalized)
             throw Exception("Cannot get neighbours before finalization")
 
-        return neighbours.getOrDefault(device, emptySet())
+        return if (selfIncluded)
+            neighbours.getOrDefault(device, emptySet()) + device
+        else
+            neighbours.getOrDefault(device, emptySet())
     }
 }
 

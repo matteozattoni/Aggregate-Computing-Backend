@@ -12,11 +12,6 @@ import java.net.SocketAddress
 class LocalExecutionDevice(id: Int, override val address: SocketAddress) : EmulatedDevice(id), InternetDevice {
     override val physicalDevice = SocketCommunication(this)
 
-    override fun getSensor(sensorName: String): Any {
-        physicalDevice.send(Message(id, MessageType.ReadSensor, sensorName))
-        return 0
-    }
-
     override fun execute() = adapter!!.execute()
 
     fun goFullWeight() = RemoteDevice(id, address)

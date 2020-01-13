@@ -23,8 +23,4 @@ class ProtelisAdapter(override val device: Device,
     }
 
     override fun execute() = vm.runCycle()
-
-    override fun readSensor(name: String): Any {
-        return 0
-    }
 }

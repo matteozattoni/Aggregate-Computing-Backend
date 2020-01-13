@@ -8,7 +8,5 @@ import devices.Device
 interface Adapter {
     val device: Device
 
-    fun readSensor(name: String): Any
-
     fun execute(): Unit
 }

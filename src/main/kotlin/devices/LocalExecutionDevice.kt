@@ -14,5 +14,9 @@ class LocalExecutionDevice(id: Int, override val address: SocketAddress) : Emula
 
     override fun execute() = adapter!!.execute()
 
+    override fun showResult(result: String) {
+        physicalDevice.send(Message(id, MessageType.Result, result))
+    }
+
     fun goFullWeight() = RemoteDevice(id, address)
 }

@@ -14,7 +14,7 @@ internal class ProtelisAdapterTest {
     class HelloContext(private val device: Device, networkManager: NetworkManager) : ProtelisContext(device, networkManager) {
         override fun instance(): ProtelisContext = HelloContext(device, networkManager)
 
-        fun announce(something: String) = println("${device.id} - $something")
+        fun announce(something: String) = device.showResult("${device.id} - $something")
     }
 
     init {
@@ -24,16 +24,16 @@ internal class ProtelisAdapterTest {
         val protelisModuleName = "hello"
         val numDevices = 5
 
-        repeat(numDevices) {
-            Support.devices.createAndAddDevice { id ->
+        repeat(numDevices) {n ->
+            val device = Support.devices.createAndAddDevice { id ->
                 VirtualDevice(id).apply { adapter = ProtelisAdapter(this, protelisModuleName, ::HelloContext) }
             }
+            if (n == 0)
+                ((device as EmulatedDevice).adapter as ProtelisAdapter).context.executionEnvironment.put("leader", true)
         }
 
         Support.devices.finalize(Topology.Ring)
 
-        ((Support.devices.getDevices().first() as EmulatedDevice).adapter as ProtelisAdapter)
-            .context.executionEnvironment.put("leader", true)
     }
 
     @org.junit.jupiter.api.Test

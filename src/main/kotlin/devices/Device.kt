@@ -27,4 +27,9 @@ interface Device {
      * Tell this Device something
      */
     fun tell(message: Message)
+
+    /**
+     * Show a result of computation
+     */
+    fun showResult(result: String): Unit
 }

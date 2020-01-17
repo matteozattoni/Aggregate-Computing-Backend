@@ -14,10 +14,10 @@ class RemoteDevice(id: Int, override val address: SocketAddress) : AbstractDevic
 
     override fun execute() = physicalDevice.send(Message(id, MessageType.Execute))
 
-    /**
-     * The Status is maintained both here in the model and sent to the physical device
-     * Maintaining the status in the model is useful to avoid unnecessary communications
-     */
+    override fun showResult(result: String) {
+        physicalDevice.send(Message(id, MessageType.Result, result))
+    }
+
     override fun tell(message: Message) {
         super.tell(message)
         when(message.type){

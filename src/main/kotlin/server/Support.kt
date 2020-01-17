@@ -28,7 +28,9 @@ object Support : AbstractDevice(-1), InternetDevice {
     }
 
     override fun tell(message: Message) {
+    }
 
+    override fun showResult(result: String) {
     }
 
     private val defaultSocketCallback: (AsynchronousSocketChannel) -> Unit = {

@@ -35,7 +35,8 @@ case class ScafiAdapter(device: Device, program: AggregateProgram) extends Adapt
     val sensors = obtainSensorValues(defaultSensors) ++ obtainSensorValues(customSensors.toMap)
 
     val result = program(factory.context(device.getId, exports, sensors))
-    println(s"result of ${device.getId}: " + result.root())
+
+    device.showResult(s"${device.getId}: " + result.root())
 
     //tell my export to my neighbours
     //for (d <- Support.INSTANCE.getDevices.getNeighbours(device, true).asScala) {

@@ -11,6 +11,10 @@ class DummyDevice(id: Int) : AbstractDevice(id) {
 
     }
 
+    override fun showResult(result: String) {
+        println(result)
+    }
+
     override fun tell(message: Message) {
 
     }

@@ -7,7 +7,7 @@ import adapters.Adapter
 import java.net.SocketAddress
 
 /**
- * Device model that executes locally but reads/writes sensors/actuators remotely
+ * Device model that executes locally but shows the results on the physical device
  */
 class LocalExecutionDevice(id: Int, override val address: SocketAddress) : EmulatedDevice(id), InternetDevice {
     override val physicalDevice = SocketCommunication(this)
@@ -16,6 +16,12 @@ class LocalExecutionDevice(id: Int, override val address: SocketAddress) : Emula
 
     override fun showResult(result: String) {
         physicalDevice.send(Message(id, MessageType.Result, result))
+    }
+
+    override fun tell(message: Message) {
+        super.tell(message)
+        if (message.type == MessageType.Result)
+            physicalDevice.send(message)
     }
 
     fun goFullWeight() = RemoteDevice(id, address)

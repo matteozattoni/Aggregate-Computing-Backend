@@ -54,7 +54,6 @@ class SocketCommunication(override val device: InternetDevice): Communication<As
         var client: AsynchronousSocketChannel? = null
         var stream: ObjectOutputStream? = null
         try {
-            println("$address")
             client = AsynchronousSocketChannel.open()
             val future = client!!.connect(address)
             future.get()

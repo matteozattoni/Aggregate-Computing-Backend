@@ -8,7 +8,7 @@ abstract class AbstractDevice(override val id: Int) : Device {
 
     override fun tell(message: Message) {
         when(message.type){
-            MessageType.Status -> status.add(message)
+            MessageType.Status,
             MessageType.Result -> {
                 //remove old results from same device
                 status.removeAll { it.senderUid == message.senderUid }

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="server_min">
+    <output-path>$PROJECT_DIR$/out/artifacts/server_min</output-path>
+    <root id="archive" name="server_min.jar">
+      <element id="module-output" name="AggregateComputingBackend.main" />
+    </root>
+  </artifact>
+</component>

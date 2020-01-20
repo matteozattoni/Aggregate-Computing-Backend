@@ -12,8 +12,8 @@ class AggregateProgramBuilderTest {
             //override fun main(): Any = this.mid()
 
             val empty: List<Int> = listOf()
-            fun isMe(): Boolean = this.nbr<Int>(def0 { this.mid() as Int }) == this.mid()
-            override fun main(): Any = this.foldhood<List<Int>>(
+            fun isMe(): Boolean = this.nbr(def0 { this.mid() as Int }) == this.mid()
+            override fun main(): Any = this.foldhood(
                 def0 { empty },
                 def2 { l1,l2 -> l1 + l2 },
                 def0 { this.mux(isMe(), empty, listOf(this.nbr(def0 {this.mid() as Int }))) }

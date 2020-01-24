@@ -2,9 +2,13 @@ package communication
 
 import devices.Device
 import devices.InternetDevice
+import devices.RemoteDevice
+import server.Support
 import java.io.IOException
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
+import java.net.InetAddress
+import java.net.InetSocketAddress
 import java.nio.channels.AsynchronousServerSocketChannel
 import java.nio.channels.AsynchronousSocketChannel
 import java.nio.channels.Channels
@@ -22,7 +26,7 @@ class SocketCommunication(override val device: InternetDevice): Communication<As
     override fun startServer(onReceive: (AsynchronousSocketChannel) -> Unit) {
         val server = AsynchronousServerSocketChannel.open()
         server.bind(address)
-        println(device.id.toString() + " started at " + server.localAddress)
+        println("$device started at ${server.localAddress}")
         running = true
         server.accept<Any>(null, object : CompletionHandler<AsynchronousSocketChannel, Any> {
             override fun completed(clientChannel: AsynchronousSocketChannel?, attachment: Any?) {
@@ -74,4 +78,28 @@ class SocketCommunication(override val device: InternetDevice): Communication<As
             }
         }
     }
+
+    companion object {
+        val serverCallback: (AsynchronousSocketChannel) -> Unit = {
+            val address = it.remoteAddress
+            val message = Support.physicalDevice.extractMessage(it)
+            when (message.type) {
+                MessageType.Join -> {
+                    val ip = address.toString().trim('/').split(':').first()
+                    val port = message.content.toString().toInt()
+                    val joining = Support.devices.createAndAddDevice { id ->
+                        RemoteDevice(id, InetSocketAddress(InetAddress.getByName(ip), port))
+                    }
+                    joining.tell(Message(Support.id, MessageType.ID, joining.id))
+
+                    println("$ip:$port joins")
+                }
+                MessageType.SendToNeighbours -> Support.devices.getNeighbours(message.senderUid).forEach { n ->
+                    n.tell(message.content as Message)
+                }
+                else -> { }
+            }
+        }
+    }
+
 }

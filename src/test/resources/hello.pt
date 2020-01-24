@@ -8,18 +8,18 @@ import protelis:state:time
 let leader = env.has("leader");
 
 if(leader) {
-	self.announce("The leader is at "+self.getDeviceUID().getUID());
-	self.announce("The leader's count is: "+countDownWithDecay(4,1));
+	self.announce("I'm the leader!");
+	//self.announce("The leader's count is: "+countDownWithDecay(4,1));
 	true;
 } else {
 	// Otherwise, stay silent
 	false;
 };
 
-// Check if any neighbor is the leader
+// Check if any neighbour is the leader
 if (anyHood(nbr(leader))) {
 	// if so, speak!
-	self.announce("Hello from the leader to its neighbor at "+self.getDeviceUID().getUID());
+	self.announce("Hello to the leader from its neighbor "+self.getName());
 	true;
 } else {
 	// Otherwise, stay silent

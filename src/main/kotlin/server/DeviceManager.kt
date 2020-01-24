@@ -27,11 +27,6 @@ class DeviceManager {
         finalized = false
     }
 
-    /*fun finalizeIfNecessary(topology: Topology = Topology.Line) {
-        if (!finalized)
-            finalize(topology)
-    }*/
-
     /**
      * Cuts the possibility to add new devices and sets the neighbours of each Device based on the chosen Topology
      */
@@ -56,6 +51,10 @@ class DeviceManager {
                                 devices[(index - 1 + devices.size) % devices.size],
                                 devices[(index + 1) % devices.size]
                             )
+                    }
+                Topology.FullyConnected ->
+                    devices.forEach {
+                        neighbours[it] = devices.minus(it).toSet()
                     }
             }
         }
@@ -95,6 +94,30 @@ class DeviceManager {
         else
             neighbours.getOrDefault(device, emptySet())
     }
+
+    /**
+     * Swaps a device with another one, keeping the same neighbours
+     */
+    fun replace(toReplace: Device, replacement: Device) {
+        val n = getNeighbours(toReplace)
+        devices -= toReplace
+        devices += replacement
+        neighbours[replacement] = n
+    }
+
+    /**
+     * Prints all the relationships
+     */
+    fun printNeighbours() {
+        if (!finalized)
+            throw Exception("Cannot print neighbours before finalization")
+
+        neighbours.flatMap { entry ->
+            entry.value.map { setOf(entry.key, it) }
+        }.toSet()
+            .map { it.joinToString(" <-> ") }
+            .forEach(::println)
+    }
 }
 
 enum class Topology {
@@ -105,5 +128,9 @@ enum class Topology {
     /**
      * Just like Line, but the first will have as neighbour the last one and vice-versa
      */
-    Ring
+    Ring,
+    /**
+     * Everyone is connected with everyone else
+     */
+    FullyConnected
 }

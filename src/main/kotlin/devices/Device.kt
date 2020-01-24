@@ -12,6 +12,11 @@ interface Device {
     val id: Int
 
     /**
+     * a readable name to better recognize this device
+     */
+    val name: String
+
+    /**
      * Starts executing the program this Device knows
      */
     fun execute()

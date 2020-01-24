@@ -1,7 +1,7 @@
 package adapters
 
 import adapters.scafi.{ScafiAdapter, ScafiIncarnation}
-import devices.VirtualDevice
+import devices.DeviceFactory
 import server.{ScalaSupport, Support, Topology}
 
 class ScafiAdapterTest {
@@ -20,8 +20,8 @@ class ScafiAdapterTest {
   ScalaSupport.devices.reset()
 
   for (_ <- 1 to 3) {
-    val (_,adapter) = ScalaSupport.createAndAddDevice(new VirtualDevice(_), ScafiAdapter(_, BasicUsageProgram()))
-    adapter.customSensors.put("customSensor", _.getId % 2 == 0)
+    val device = ScalaSupport.createAndAddDevice(id => DeviceFactory.virtual(id, "D" + id, ScafiAdapter(_, BasicUsageProgram())))
+    device.getAdapter.asInstanceOf[ScafiAdapter].customSensors.put("customSensor", _.getId % 2 == 0)
   }
 
   ScalaSupport.devices.finalize(Topology.Line)

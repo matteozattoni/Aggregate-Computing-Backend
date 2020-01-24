@@ -4,12 +4,13 @@ import communication.Message
 import communication.MessageType
 import communication.SocketCommunication
 import adapters.Adapter
+import server.Support
 import java.net.SocketAddress
 
 /**
  * Device model that does everything remotely
  */
-class RemoteDevice(id: Int, override val address: SocketAddress) : AbstractDevice(id), InternetDevice {
+class RemoteDevice(id: Int, override val address: SocketAddress, name: String = "") : AbstractDevice(id, name), InternetDevice {
     override val physicalDevice = SocketCommunication(this)
 
     override fun execute() = physicalDevice.send(Message(id, MessageType.Execute))
@@ -26,5 +27,5 @@ class RemoteDevice(id: Int, override val address: SocketAddress) : AbstractDevic
         }
     }
 
-    fun goLightWeight(a: Adapter) = LocalExecutionDevice(id, address).apply { adapter = a }
+    fun goLightWeight(a: Adapter) = Support.devices.replace(this, LocalExecutionDevice(id, address, name) { a } )
 }

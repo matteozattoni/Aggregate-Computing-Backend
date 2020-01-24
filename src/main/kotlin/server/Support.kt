@@ -11,10 +11,12 @@ import java.nio.channels.AsynchronousSocketChannel
 import java.util.*
 import kotlin.concurrent.thread
 
+const val SUPPORT_ID = -1
+
 /**
  *
  */
-object Support : AbstractDevice(-1), InternetDevice {
+object Support : AbstractDevice(SUPPORT_ID, "Support"), InternetDevice {
     private const val port: Int = 20000
     override val address: SocketAddress = InetSocketAddress(InetAddress.getLocalHost(), port)
     override var physicalDevice = SocketCommunication(this)
@@ -27,35 +29,16 @@ object Support : AbstractDevice(-1), InternetDevice {
     }
 
     override fun tell(message: Message) {
+        //unused
     }
 
     override fun showResult(result: String) {
-    }
-
-    private val defaultSocketCallback: (AsynchronousSocketChannel) -> Unit = {
-        val address = it.remoteAddress
-        val message = physicalDevice.extractMessage(it)
-        when (message.type) {
-            MessageType.Join -> {
-                val ip = address.toString().trim('/').split(':').first()
-                val port = message.content.toString().toInt()
-                val joining = devices.createAndAddDevice { id ->
-                    LocalExecutionDevice(id, InetSocketAddress(InetAddress.getByName(ip), port))
-                }
-                joining.tell(Message(id, MessageType.ID, joining.id))
-
-                println("$ip:$port joins")
-            }
-            MessageType.SendToNeighbours -> devices.getNeighbours(message.senderUid).forEach { n ->
-                n.tell(message.content as Message)
-            }
-            else -> { }
-        }
+        //unused
     }
 
     @JvmStatic
     fun main(args: Array<String>) {
-        physicalDevice.startServer(defaultSocketCallback)
+        physicalDevice.startServer(SocketCommunication.serverCallback)
         thread {
             val timer = Timer()
             val task = object: TimerTask() {
@@ -70,6 +53,5 @@ object Support : AbstractDevice(-1), InternetDevice {
 
             timer.schedule(task, 0, 2000)
         }
-
     }
 }

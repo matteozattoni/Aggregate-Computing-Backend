@@ -3,26 +3,26 @@ package adapters.scafi;
 import devices.VirtualDevice
 import server.Support
 import server.Topology
+import utils.FromKotlin.*
 
-class AggregateProgramBuilderTest {
+class ScafiFromKotlinTest {
     init {
         Support.devices.reset()
 
         class Program : AbstractAggregateProgram() {
             //override fun main(): Any = this.mid()
 
-            val empty: List<Int> = listOf()
-            fun isMe(): Boolean = this.nbr(def0 { this.mid() as Int }) == this.mid()
+            fun isMe(): Boolean = nbr(def0 { mid() }) == mid()
             override fun main(): Any = this.foldhood(
-                def0 { empty },
-                def2 { l1,l2 -> l1 + l2 },
-                def0 { this.mux(isMe(), empty, listOf(this.nbr(def0 {this.mid() as Int }))) }
+                def0 { listOf<Int>() },
+                def2 { l1, l2 -> l1 + l2 },
+                def0 { mux(isMe(), listOf<Int>(), listOf(nbr(def0 { mid() as Int }))) }
             )
         }
 
         repeat (3) {
             Support.devices.createAndAddDevice {id ->
-                VirtualDevice(id).apply { adapter = ScafiAdapter(this, Program()) }
+                VirtualDevice(id, "Device $id") { ScafiAdapter(it, Program()) }
             }
         }
 
@@ -33,6 +33,7 @@ class AggregateProgramBuilderTest {
     fun executeCycles() {
         repeat(5) {
             Support.execute()
+            println("------------")
         }
     }
 }

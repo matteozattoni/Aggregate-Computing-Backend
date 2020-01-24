@@ -3,7 +3,7 @@ package devices
 import communication.Message
 import communication.MessageType
 
-abstract class AbstractDevice(override val id: Int) : Device {
+abstract class AbstractDevice(override val id: Int, override val name: String) : Device {
     override var status: MutableSet<Message> = mutableSetOf()
 
     override fun tell(message: Message) {
@@ -26,6 +26,12 @@ abstract class AbstractDevice(override val id: Int) : Device {
             else -> super.equals(other)
         }
     }
+
+    /**
+     * Shows the name of this device
+     * If unspecified, the id is usd instead
+     */
+    override fun toString(): String = if (name.isNotEmpty()) name else id.toString()
 
     override fun hashCode(): Int {
         return id

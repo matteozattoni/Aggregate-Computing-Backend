@@ -1,20 +1,19 @@
-package adapters
+package adapters.protelis
 
 import server.Support
 import devices.Device
 import devices.VirtualDevice
 import devices.EmulatedDevice
-import adapters.protelis.ProtelisNetworkManager
-import adapters.protelis.ProtelisContext
-import adapters.protelis.ProtelisAdapter
 import org.protelis.vm.NetworkManager
 import server.Topology
 
 internal class ProtelisAdapterTest {
     class HelloContext(private val device: Device, networkManager: NetworkManager) : ProtelisContext(device, networkManager) {
-        override fun instance(): ProtelisContext = HelloContext(device, networkManager)
+        override fun instance(): ProtelisContext =
+            HelloContext(device, networkManager)
 
-        fun announce(something: String) = device.showResult("${device.id} - $something")
+        fun announce(something: String) = device.showResult("$device - $something")
+        fun getName() = device.toString()
     }
 
     init {
@@ -24,9 +23,13 @@ internal class ProtelisAdapterTest {
         val protelisModuleName = "hello"
         val numDevices = 5
 
+        val names = listOf("Mario", "", "Marta", "Maurizio", "Michele")
+
         repeat(numDevices) {n ->
             val device = Support.devices.createAndAddDevice { id ->
-                VirtualDevice(id).apply { adapter = ProtelisAdapter(this, protelisModuleName, ::HelloContext) }
+                VirtualDevice(id, names[n]) { ProtelisAdapter(it, protelisModuleName,
+                    ProtelisAdapterTest::HelloContext
+                ) }
             }
             if (n == 0)
                 ((device as EmulatedDevice).adapter as ProtelisAdapter).context.executionEnvironment.put("leader", true)
@@ -34,12 +37,16 @@ internal class ProtelisAdapterTest {
 
         Support.devices.finalize(Topology.Ring)
 
+        println("------------")
+        Support.devices.printNeighbours()
+        println("------------")
     }
 
     @org.junit.jupiter.api.Test
     fun executeCycles() {
         repeat(5) {
             Support.execute()
+            println("------------")
         }
     }
 }

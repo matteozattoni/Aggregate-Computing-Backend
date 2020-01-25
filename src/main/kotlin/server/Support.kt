@@ -14,7 +14,8 @@ import kotlin.concurrent.thread
 const val SUPPORT_ID = -1
 
 /**
- *
+ * The server basis.
+ * The only place where the net topology is known.
  */
 object Support : AbstractDevice(SUPPORT_ID, "Support"), InternetDevice {
     private const val port: Int = 20000
@@ -24,12 +25,16 @@ object Support : AbstractDevice(SUPPORT_ID, "Support"), InternetDevice {
     val devices: DeviceManager = DeviceManager();
 
     override fun execute() {
-        //devices.finalizeIfNecessary()
         devices.getDevices().forEach { it.tell(Message(id, MessageType.Execute))}
     }
 
     override fun tell(message: Message) {
-        //unused
+        when (message.type) {
+            MessageType.SendToNeighbours -> devices.getNeighbours(message.senderUid).forEach {
+                it.tell(message.content as Message)
+            }
+            else -> { }
+        }
     }
 
     override fun showResult(result: String) {
@@ -38,6 +43,8 @@ object Support : AbstractDevice(SUPPORT_ID, "Support"), InternetDevice {
 
     @JvmStatic
     fun main(args: Array<String>) {
+        //used for test purposes, mainly to check the interactions between server and clients
+
         physicalDevice.startServer(SocketCommunication.serverCallback)
         thread {
             val timer = Timer()

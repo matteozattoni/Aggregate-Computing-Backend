@@ -91,14 +91,12 @@ class SocketCommunication(override val device: InternetDevice): Communication<As
                     val joining = Support.devices.createAndAddDevice { id ->
                         RemoteDevice(id, InetSocketAddress(InetAddress.getByName(ip), port))
                     }
+                    //tell to the physical device the assigned ID
                     joining.tell(Message(Support.id, MessageType.ID, joining.id))
 
-                    println("$ip:$port joins")
+                    println("$ip:$port joined with id ${joining.id}")
                 }
-                MessageType.SendToNeighbours -> Support.devices.getNeighbours(message.senderUid).forEach { n ->
-                    n.tell(message.content as Message)
-                }
-                else -> { }
+                else -> Support.tell(message)
             }
         }
     }

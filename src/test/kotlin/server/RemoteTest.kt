@@ -23,9 +23,9 @@ class RemoteTest {
     fun test() {
         Support.physicalDevice.startServer(SocketCommunication.serverCallback)
 
-        while (Support.devices.getDevices().none { it is RemoteDevice }) {
+        //while (Support.devices.getDevices().none { it is RemoteDevice }) {
             //wait for a Client
-        }
+        //}
 
         Support.devices.finalize(Topology.Ring)
 
@@ -33,6 +33,6 @@ class RemoteTest {
 
         Support.execute()
 
-        while (true) { }
+        //while (true) { }
     }
 }

@@ -1,6 +1,6 @@
 package server
 
-import devices.server.DummyDevice
+import devices.implementations.DummyDevice
 import org.junit.jupiter.api.Assertions._
 
 class ScalaSupportTest {

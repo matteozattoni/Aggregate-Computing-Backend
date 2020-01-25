@@ -1,9 +1,9 @@
 package adapters.protelis
 
 import server.Support
-import devices.Device
-import devices.server.VirtualDevice
-import devices.EmulatedDevice
+import devices.interfaces.Device
+import devices.implementations.VirtualDevice
+import devices.interfaces.EmulatedDevice
 import org.protelis.vm.NetworkManager
 import server.Topology
 

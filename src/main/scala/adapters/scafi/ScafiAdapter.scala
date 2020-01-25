@@ -5,8 +5,9 @@ import java.util.Date
 import adapters.Adapter
 import adapters.scafi.ScafiIncarnation._
 import communication.{Message, MessageType}
-import devices.Device
+import devices.interfaces.Device
 import server.ScalaSupport
+
 import scala.collection.mutable
 import scala.util.Random
 

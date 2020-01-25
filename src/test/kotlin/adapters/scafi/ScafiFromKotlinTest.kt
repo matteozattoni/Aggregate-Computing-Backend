@@ -1,6 +1,6 @@
 package adapters.scafi;
 
-import devices.server.VirtualDevice
+import devices.implementations.VirtualDevice
 import server.Support
 import server.Topology
 import utils.FromKotlin.*

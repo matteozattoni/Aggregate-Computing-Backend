@@ -1,6 +1,6 @@
 package adapters.protelis
 
-import devices.Device
+import devices.interfaces.Device
 import adapters.Adapter
 import org.protelis.lang.ProtelisLoader
 import org.protelis.vm.NetworkManager

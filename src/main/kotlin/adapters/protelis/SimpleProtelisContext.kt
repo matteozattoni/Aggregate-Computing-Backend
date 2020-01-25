@@ -1,6 +1,6 @@
 package adapters.protelis
 
-import devices.Device
+import devices.interfaces.Device
 import org.protelis.vm.NetworkManager
 
 class SimpleProtelisContext(private val device: Device, networkManager: NetworkManager) : ProtelisContext(device, networkManager) {

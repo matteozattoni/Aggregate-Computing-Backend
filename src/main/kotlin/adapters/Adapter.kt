@@ -1,6 +1,6 @@
 package adapters
 
-import devices.Device
+import devices.interfaces.Device
 
 /**
  * Provides platform-specific operations

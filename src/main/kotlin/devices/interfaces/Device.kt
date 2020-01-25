@@ -1,4 +1,4 @@
-package devices
+package devices.interfaces
 
 import communication.Message
 

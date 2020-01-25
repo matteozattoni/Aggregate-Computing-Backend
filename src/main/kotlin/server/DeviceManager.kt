@@ -1,6 +1,6 @@
 package server
 
-import devices.Device
+import devices.interfaces.Device
 import java.lang.Exception
 
 /**
@@ -61,9 +61,9 @@ class DeviceManager {
         finalized = true
     }
 
-    fun createDevice(device: (Int)->Device): Device = device(generateID())
+    fun createDevice(device: (Int)-> Device): Device = device(generateID())
 
-    fun createAndAddDevice(device: (Int)->Device): Device {
+    fun createAndAddDevice(device: (Int)-> Device): Device {
         val created = createDevice(device)
         this += created
         return created

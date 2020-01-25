@@ -1,9 +1,6 @@
 package communication
 
-import devices.Device
-import devices.InternetDevice
-import java.net.InetAddress
-import java.net.SocketAddress
+import devices.interfaces.Device
 
 /**
  * Represents the way a Device model has to communicate with the physical one

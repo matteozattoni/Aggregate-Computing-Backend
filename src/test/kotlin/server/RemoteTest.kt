@@ -2,7 +2,7 @@ package server
 
 import adapters.scafi.AbstractAggregateProgram
 import communication.SocketCommunication
-import devices.server.RemoteDevice
+import devices.implementations.RemoteDevice
 import org.junit.jupiter.api.Test
 
 class RemoteTest {

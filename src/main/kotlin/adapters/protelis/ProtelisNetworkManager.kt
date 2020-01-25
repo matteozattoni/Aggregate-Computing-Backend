@@ -3,7 +3,7 @@ package adapters.protelis
 import server.Support
 import communication.Message
 import communication.MessageType
-import devices.Device
+import devices.interfaces.Device
 import org.protelis.lang.datatype.DeviceUID
 import org.protelis.vm.CodePath
 import org.protelis.vm.NetworkManager

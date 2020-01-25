@@ -1,7 +1,7 @@
 package server
 
-import devices.Device
-import devices.server.DummyDevice
+import devices.interfaces.Device
+import devices.implementations.DummyDevice
 import org.junit.jupiter.api.Assertions.*
 
 internal class DeviceManagerTest {

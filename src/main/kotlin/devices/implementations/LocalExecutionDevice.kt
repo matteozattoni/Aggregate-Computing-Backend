@@ -1,11 +1,11 @@
-package devices.server
+package devices.implementations
 
 import communication.Message
 import communication.MessageType
 import adapters.Adapter
 import communication.SocketCommunication
-import devices.AbstractDevice
-import devices.InternetDevice
+import devices.interfaces.AbstractDevice
+import devices.interfaces.InternetDevice
 import server.Support
 import java.net.SocketAddress
 

@@ -1,7 +1,7 @@
 package communication
 
-import devices.InternetDevice
-import devices.server.RemoteDevice
+import devices.interfaces.InternetDevice
+import devices.implementations.RemoteDevice
 import server.Support
 import java.io.IOException
 import java.io.ObjectInputStream

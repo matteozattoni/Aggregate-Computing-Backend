@@ -1,7 +1,7 @@
 package adapters.protelis
 
 import com.google.common.hash.Hashing
-import devices.Device
+import devices.interfaces.Device
 import org.protelis.lang.datatype.DeviceUID
 import org.protelis.vm.NetworkManager
 import org.protelis.vm.impl.AbstractExecutionContext

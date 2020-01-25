@@ -1,6 +1,6 @@
 package server
 
-import devices.Device
+import devices.interfaces.Device
 import utils.ToKotlin
 
 object ScalaSupport {

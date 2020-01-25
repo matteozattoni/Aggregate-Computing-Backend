@@ -1,8 +1,7 @@
-package devices
+package devices.interfaces
 
 import communication.Communication
-import java.net.InetAddress
-import java.net.InetSocketAddress
+import devices.interfaces.Device
 import java.net.SocketAddress
 
 /**

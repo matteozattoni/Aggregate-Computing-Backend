@@ -4,7 +4,7 @@ import java.util.Date
 import java.util.function.Consumer
 
 import adapters.Adapter
-import devices.Device
+import devices.{Device, EmulatedDevice, RemoteDevice}
 import ScafiIncarnation._
 import communication.{Message, MessageType}
 import server.{ScalaSupport, Support}
@@ -12,7 +12,7 @@ import server.{ScalaSupport, Support}
 import scala.collection.mutable
 import scala.util.Random
 
-case class ScafiAdapter(device: Device, program: AggregateProgram, isClient: Boolean = false, server: Device = null) extends Adapter {
+case class ScafiAdapter(device: Device, program: AggregateProgram, server: Device = null) extends Adapter {
   private val defaultSensors: Map[LSNS, Device => Any] = Map(
     LSNS_RANDOM -> (_ => new Random().nextDouble()),
     LSNS_TIME -> (_ => System.currentTimeMillis()),
@@ -40,10 +40,12 @@ case class ScafiAdapter(device: Device, program: AggregateProgram, isClient: Boo
     //tell my export to my neighbours (myself included)
     val toSend = new Message(device.getId, MessageType.Result, result)
 
-    if (!isClient) {
+    if (device.isInstanceOf[EmulatedDevice]) {
+      //if executing in the server, neighbours are known
       for (d <- ScalaSupport.devices.getNeighbours(device, true).asScala)
         d.tell(toSend)
     } else
+      //otherwise I send the message to the server, who will send it to my neighbours
       server.tell(new Message(device.getId, MessageType.SendToNeighbours, toSend))
   }
 

@@ -22,7 +22,7 @@ class ScafiFromKotlinTest {
 
         repeat (3) {
             Support.devices.createAndAddDevice {id ->
-                VirtualDevice(id, "Device $id") { ScafiAdapter(it, Program(), false, null) }
+                VirtualDevice(id, "Device $id") { ScafiAdapter(it, Program(), null) }
             }
         }
 

@@ -2,7 +2,7 @@ package adapters.protelis
 
 import server.Support
 import devices.Device
-import devices.VirtualDevice
+import devices.server.VirtualDevice
 import devices.EmulatedDevice
 import org.protelis.vm.NetworkManager
 import server.Topology
@@ -27,9 +27,12 @@ internal class ProtelisAdapterTest {
 
         repeat(numDevices) {n ->
             val device = Support.devices.createAndAddDevice { id ->
-                VirtualDevice(id, names[n]) { ProtelisAdapter(it, protelisModuleName,
-                    ProtelisAdapterTest::HelloContext
-                ) }
+                VirtualDevice(id, names[n]) {
+                    ProtelisAdapter(
+                        it, protelisModuleName,
+                        ProtelisAdapterTest::HelloContext
+                    )
+                }
             }
             if (n == 0)
                 ((device as EmulatedDevice).adapter as ProtelisAdapter).context.executionEnvironment.put("leader", true)

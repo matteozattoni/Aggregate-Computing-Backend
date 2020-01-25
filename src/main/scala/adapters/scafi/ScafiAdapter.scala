@@ -4,9 +4,10 @@ import java.util.Date
 import java.util.function.Consumer
 
 import adapters.Adapter
-import devices.{Device, EmulatedDevice, RemoteDevice}
+import devices.{Device, EmulatedDevice}
 import ScafiIncarnation._
 import communication.{Message, MessageType}
+import devices.client.Client
 import server.{ScalaSupport, Support}
 
 import scala.collection.mutable
@@ -40,7 +41,7 @@ case class ScafiAdapter(device: Device, program: AggregateProgram, server: Devic
     //tell my export to my neighbours (myself included)
     val toSend = new Message(device.getId, MessageType.Result, result)
 
-    if (device.isInstanceOf[EmulatedDevice]) {
+    if (!device.isInstanceOf[Client]) {
       //if executing in the server, neighbours are known
       for (d <- ScalaSupport.devices.getNeighbours(device, true).asScala)
         d.tell(toSend)

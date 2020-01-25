@@ -1,16 +1,19 @@
-package devices
+package devices.server
 
 import communication.Message
 import communication.MessageType
 import communication.SocketCommunication
 import adapters.Adapter
+import devices.EmulatedDevice
+import devices.InternetDevice
 import server.Support
 import java.net.SocketAddress
 
 /**
  * Device model that executes locally but shows the results on the physical device
  */
-class LocalExecutionDevice(id: Int, override val address: SocketAddress, name: String, adapterBuilder: (EmulatedDevice) -> Adapter) : EmulatedDevice(id, name, adapterBuilder), InternetDevice {
+class LocalExecutionDevice(id: Int, override val address: SocketAddress, name: String, adapterBuilder: (EmulatedDevice) -> Adapter) : EmulatedDevice(id, name, adapterBuilder),
+    InternetDevice {
     override val physicalDevice = SocketCommunication(this)
 
     override fun showResult(result: String) {

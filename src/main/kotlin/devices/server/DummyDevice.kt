@@ -1,6 +1,7 @@
-package devices
+package devices.server
 
 import communication.Message
+import devices.AbstractDevice
 
 /**
  * Fake Device that does nothing

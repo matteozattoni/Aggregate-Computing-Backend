@@ -1,6 +1,7 @@
 package devices
 
 import adapters.Adapter
+import devices.server.VirtualDevice
 import utils.ToKotlin
 
 /**

@@ -1,8 +1,7 @@
 package communication
 
-import devices.Device
 import devices.InternetDevice
-import devices.RemoteDevice
+import devices.server.RemoteDevice
 import server.Support
 import java.io.IOException
 import java.io.ObjectInputStream
@@ -89,7 +88,10 @@ class SocketCommunication(override val device: InternetDevice): Communication<As
                     val ip = address.toString().trim('/').split(':').first()
                     val port = message.content.toString().toInt()
                     val joining = Support.devices.createAndAddDevice { id ->
-                        RemoteDevice(id, InetSocketAddress(InetAddress.getByName(ip), port))
+                        RemoteDevice(
+                            id,
+                            InetSocketAddress(InetAddress.getByName(ip), port)
+                        )
                     }
                     //tell to the physical device the assigned ID
                     joining.tell(Message(Support.id, MessageType.ID, joining.id))

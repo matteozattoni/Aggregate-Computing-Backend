@@ -1,6 +1,7 @@
-package devices
+package devices.server
 
 import adapters.Adapter
+import devices.EmulatedDevice
 
 /**
  * Fully emulated Device

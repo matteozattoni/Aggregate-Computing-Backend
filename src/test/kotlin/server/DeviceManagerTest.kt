@@ -1,7 +1,7 @@
 package server
 
 import devices.Device
-import devices.DummyDevice
+import devices.server.DummyDevice
 import org.junit.jupiter.api.Assertions.*
 
 internal class DeviceManagerTest {
@@ -35,7 +35,10 @@ internal class DeviceManagerTest {
         deviceManager.printNeighbours()
 
         assertEquals(deviceManager.getNeighbours(0), setOf(DummyDevice(1)))
-        assertEquals(deviceManager.getNeighbours(1), setOf(DummyDevice(0), DummyDevice(2)))
+        assertEquals(deviceManager.getNeighbours(1), setOf(
+            DummyDevice(0),
+            DummyDevice(2)
+        ))
         assertEquals(deviceManager.getNeighbours(2), setOf(DummyDevice(1)))
         assertEquals(deviceManager.getNeighbours(3), emptySet<Device>())
     }
@@ -46,9 +49,18 @@ internal class DeviceManagerTest {
 
         deviceManager.printNeighbours()
 
-        assertEquals(deviceManager.getNeighbours(0), setOf(DummyDevice(1), DummyDevice(2)))
-        assertEquals(deviceManager.getNeighbours(1), setOf(DummyDevice(0), DummyDevice(2)))
-        assertEquals(deviceManager.getNeighbours(2), setOf(DummyDevice(1), DummyDevice(0)))
+        assertEquals(deviceManager.getNeighbours(0), setOf(
+            DummyDevice(1),
+            DummyDevice(2)
+        ))
+        assertEquals(deviceManager.getNeighbours(1), setOf(
+            DummyDevice(0),
+            DummyDevice(2)
+        ))
+        assertEquals(deviceManager.getNeighbours(2), setOf(
+            DummyDevice(1),
+            DummyDevice(0)
+        ))
         assertEquals(deviceManager.getNeighbours(3), emptySet<Device>())
     }
 
@@ -77,7 +89,12 @@ internal class DeviceManagerTest {
 
         deviceManager.printNeighbours()
 
-        assertEquals(deviceManager.getNeighbours(0), setOf(DummyDevice(1), DummyDevice(2), DummyDevice(3), DummyDevice(4)))
+        assertEquals(deviceManager.getNeighbours(0), setOf(
+            DummyDevice(1),
+            DummyDevice(2),
+            DummyDevice(3),
+            DummyDevice(4)
+        ))
         assertEquals(deviceManager.getNeighbours(1).count(), 4)
         assertEquals(deviceManager.getNeighbours(5), emptySet<Device>())
     }

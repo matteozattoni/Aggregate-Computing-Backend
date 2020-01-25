@@ -83,6 +83,7 @@ class SocketCommunication(override val device: InternetDevice): Communication<As
         val serverCallback: (AsynchronousSocketChannel) -> Unit = {
             val address = it.remoteAddress
             val message = Support.physicalDevice.extractMessage(it)
+
             when (message.type) {
                 MessageType.Join -> {
                     val ip = address.toString().trim('/').split(':').first()

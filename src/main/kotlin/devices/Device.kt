@@ -26,7 +26,7 @@ interface Device {
      */
     var status: MutableSet<Message>
 
-    fun selfStatus(): Set<Message> = status.filter { it.senderUid == id }.toSet()
+    //fun selfStatus(): Set<Message> = status.filter { it.senderUid == id }.toSet()
 
     /**
      * Tell this Device something

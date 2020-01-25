@@ -15,12 +15,12 @@ const val SUPPORT_ID = -1
  * The server basis.
  * The only place where the net topology is known.
  */
-object Support : AbstractDevice(SUPPORT_ID, "Support"), InternetDevice {
+object Support : AbstractDevice(SUPPORT_ID, "Support", ::println), InternetDevice {
     private const val port: Int = 20000
     override val address: SocketAddress = InetSocketAddress(InetAddress.getLocalHost(), port)
     override var physicalDevice = SocketCommunication(this)
 
-    val devices: DeviceManager = DeviceManager();
+    val devices: DeviceManager = DeviceManager()
 
     override fun execute() {
         devices.getDevices().forEach { it.tell(Message(id, MessageType.Execute))}

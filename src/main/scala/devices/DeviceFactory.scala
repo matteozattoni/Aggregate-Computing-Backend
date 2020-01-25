@@ -9,6 +9,6 @@ import utils.ToKotlin
  */
 object DeviceFactory {
   def virtual(id: Int, name: String, adapter: EmulatedDevice => Adapter): VirtualDevice = {
-    new VirtualDevice(id, name, ToKotlin.toKotlinFun(adapter))
+    new VirtualDevice(id, name, ToKotlin.toKotlinFun(adapter), ToKotlin.toKotlinFun(s => println(s)))
   }
 }

@@ -3,7 +3,9 @@ package devices
 import communication.Message
 import communication.MessageType
 
-abstract class AbstractDevice(override val id: Int, override val name: String) : Device {
+abstract class AbstractDevice(override val id: Int,
+                              override val name: String,
+                              private val onResult: (String) -> Any) : Device {
     override var status: MutableSet<Message> = mutableSetOf()
 
     override fun tell(message: Message) {
@@ -26,6 +28,8 @@ abstract class AbstractDevice(override val id: Int, override val name: String) :
             else -> super.equals(other)
         }
     }
+
+    override fun showResult(result: String) { onResult(result) }
 
     /**
      * Shows the name of this device

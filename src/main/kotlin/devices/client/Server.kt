@@ -12,7 +12,7 @@ import java.net.InetSocketAddress
 /**
  * Model of Server to be used by Clients
  */
-class Server(address: InetAddress, port: Int) : AbstractDevice(Support.id, "Support"), InternetDevice {
+class Server(address: InetAddress, port: Int) : AbstractDevice(Support.id, "Support", ::println), InternetDevice {
     override val address = InetSocketAddress(address, port)
     override val physicalDevice = SocketCommunication(this)
 

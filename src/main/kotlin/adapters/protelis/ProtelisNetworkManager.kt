@@ -29,7 +29,7 @@ class ProtelisNetworkManager(private val device: Device, private val server: Dev
      */
     override fun shareState(toSend: Map<CodePath, Any>) {
         if (toSend.isNotEmpty()) {
-            val message = Message(device.id, MessageType.Status, toSend)
+            val message = Message(device.id, MessageType.Status, HashMap(toSend))
 
             if (server == null) {
                 //executing on Server

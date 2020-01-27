@@ -10,6 +10,8 @@ repositories {
 }
 test {
     useJUnitPlatform()
+
+    exclude '**/RemoteTest.class'
 }
 
 dependencies {

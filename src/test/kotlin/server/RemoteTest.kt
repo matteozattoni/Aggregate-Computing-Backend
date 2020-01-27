@@ -23,15 +23,13 @@ class RemoteTest {
 
     @Test
     fun test() {
-        Support.physicalDevice.startServer(SocketCommunication.serverCallback)
+        Support.physicalDevice.startServer()
 
         while (Support.devices.getDevices().none { it is RemoteDevice }) {
             //wait for a Client
         }
 
         Support.devices.finalize(Topology.Ring)
-
-        println("finalized")
 
         Support.execute()
 

@@ -11,7 +11,9 @@ repositories {
 test {
     useJUnitPlatform()
 
-    exclude '**/RemoteTest.class'
+    if (project.hasProperty('excludeTests')) {
+        exclude project.property('excludeTests')
+    }
 }
 
 dependencies {

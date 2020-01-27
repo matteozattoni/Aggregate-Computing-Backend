@@ -13,11 +13,13 @@ interface Communication<T> {
      */
     fun extractMessage(received: T) : Message
 
-    fun startServer(onReceive: (T) -> Unit)
+    fun startServer(onReceive: (T) -> Unit = ::serverCallback)
     fun stopServer()
 
     /**
      * Sends a Message to the physical Device
      */
     fun send(message: Message)
+
+    fun serverCallback(connection: T)
 }

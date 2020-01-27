@@ -78,10 +78,9 @@ class SocketCommunication(override val device: InternetDevice): Communication<As
         }
     }
 
-    companion object {
-        val serverCallback: (AsynchronousSocketChannel) -> Unit = {
-            val address = it.remoteAddress
-            val message = Support.physicalDevice.extractMessage(it)
+     override fun serverCallback(connection: AsynchronousSocketChannel) {
+            val address = connection.remoteAddress
+            val message = Support.physicalDevice.extractMessage(connection)
 
             when (message.type) {
                 MessageType.Join -> {
@@ -101,6 +100,6 @@ class SocketCommunication(override val device: InternetDevice): Communication<As
                 else -> Support.tell(message)
             }
         }
-    }
+
 
 }

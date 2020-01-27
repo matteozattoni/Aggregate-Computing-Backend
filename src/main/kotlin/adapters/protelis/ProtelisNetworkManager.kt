@@ -11,9 +11,7 @@ import org.protelis.vm.NetworkManager
 /**
  * Protelis wrapper for Devices Communication
  */
-class ProtelisNetworkManager(private val device: Device) : NetworkManager {
-    private val neighbours
-    get() = Support.devices.getNeighbours(device)
+class ProtelisNetworkManager(private val device: Device, private val server: Device? = null) : NetworkManager {
 
     /**
      * Receive the status from this Device's neighbours
@@ -31,7 +29,17 @@ class ProtelisNetworkManager(private val device: Device) : NetworkManager {
      */
     override fun shareState(toSend: Map<CodePath, Any>) {
         if (toSend.isNotEmpty()) {
-            neighbours.forEach { it.tell(Message(device.id, MessageType.Status, toSend)) }
+            val message = Message(device.id, MessageType.Status, toSend)
+
+            if (server == null) {
+                //executing on Server
+                Support.devices.getNeighbours(device)
+                    .forEach { it.tell(message) }
+
+            } else {
+                //executing on Client
+                server.tell(Message(device.id, MessageType.SendToNeighbours, message))
+            }
         }
     }
 }

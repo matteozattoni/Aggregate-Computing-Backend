@@ -10,11 +10,11 @@ class ScafiAdapterTest {
     //override def main(): Any = rep(0){_+1}
     //override def main(): Any = mid
     //override def main(): Any = sense[Int]("randomGenerator")
-    override def main(): Any = sense[Boolean]("customSensor")
+    //override def main(): Any = sense[Boolean]("customSensor")
 
     val empty: List[Int] = List.empty
     def isMe: Boolean = nbr[Int](mid())==mid()
-    //override def main(): Any = foldhood(empty)(_++_){ mux(isMe){empty}{ List(nbr(mid())) } }
+    override def main(): Any = foldhood(empty)(_++_){ mux(isMe){empty}{ List(nbr(mid())) } }
   }
   //useful to not make adapter tests interact with each other
   ScalaSupport.devices.reset()

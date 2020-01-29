@@ -31,7 +31,8 @@ class RemoteTest {
 
         Support.devices.finalize(Topology.Ring)
 
-        Support.execute()
+        //Support.execute()
+        Support.devices.getDevices().first().execute()
 
         while (true) {
             //wait for completion

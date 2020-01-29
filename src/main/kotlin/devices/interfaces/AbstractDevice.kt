@@ -2,6 +2,8 @@ package devices.interfaces
 
 import communication.Message
 import communication.MessageType
+import scala.Tuple2
+import scala.collection.immutable.List
 
 abstract class AbstractDevice(override val id: Int,
                               override val name: String,

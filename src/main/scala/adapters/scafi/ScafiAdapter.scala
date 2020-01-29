@@ -26,8 +26,8 @@ case class ScafiAdapter(device: Device, program: AggregateProgram, server: Devic
     import collection.JavaConverters._
 
     val exports = device.getStatus.asScala
-      .filter(m => m.getType == MessageType.Result && m.getContent.isInstanceOf[EXPORT])
-      .map(m => m.getSenderUid -> m.getContent.asInstanceOf[EXPORT])
+      .filter(m => m.getType == MessageType.Result && m.getContent.isInstanceOf[ExportWrapper])
+      .map(m => m.getSenderUid -> m.getContent.asInstanceOf[ExportWrapper].export)
       .toMap
 
     val sensors = obtainSensorValues(defaultSensors) ++ obtainSensorValues(customSensors.toMap)
@@ -37,7 +37,7 @@ case class ScafiAdapter(device: Device, program: AggregateProgram, server: Devic
     device.showResult(s"$device: " + result.root())
 
     //tell my export to my neighbours (myself included)
-    val toSend = new Message(device.getId, MessageType.Result, result)
+    val toSend = new Message(device.getId, MessageType.Result, ExportWrapper(result))
 
     if (server == null) {
       //if executing in the server, neighbours are known

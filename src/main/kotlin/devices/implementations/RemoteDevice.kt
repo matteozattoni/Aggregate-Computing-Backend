@@ -23,6 +23,7 @@ class RemoteDevice(id: Int, override val address: SocketAddress, name: String = 
 
     override fun tell(message: Message) {
         super.tell(message)
+        println(message)
         physicalDevice.send(message)
     }
 

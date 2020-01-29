@@ -1,9 +1,9 @@
 package adapters.scafi;
 
 import org.junit.jupiter.api.Test
-import java.io.{FileInputStream, FileOutputStream, ObjectInputStream, ObjectOutputStream}
-import org.junit.jupiter.api.Assertions._
+import java.io.{File, FileInputStream, FileOutputStream, ObjectInputStream, ObjectOutputStream}
 
+import org.junit.jupiter.api.Assertions._
 import ScafiIncarnation._
 
 class ExportWrapperTest {
@@ -31,5 +31,7 @@ class ExportWrapperTest {
 
         //deserialized object must be correct
         assertEquals(export.getAll.toSet, des.export.getAll.toSet)
+
+        new File(fileName).delete()
     }
 }

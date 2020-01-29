@@ -1,6 +1,5 @@
-package adapters
+package adapters.scafi
 
-import adapters.scafi.{ScafiAdapter, ScafiIncarnation}
 import devices.DeviceFactory
 import server.{ScalaSupport, Support, Topology}
 

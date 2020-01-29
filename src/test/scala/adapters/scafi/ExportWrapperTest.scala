@@ -17,7 +17,7 @@ class ExportWrapperTest {
 
     @Test
     def serialize() {
-        val wrap = new ExportWrapper(export)
+        val wrap = ExportWrapper(export)
 
         //serialize
         val out: ObjectOutputStream = new ObjectOutputStream(new FileOutputStream(fileName))

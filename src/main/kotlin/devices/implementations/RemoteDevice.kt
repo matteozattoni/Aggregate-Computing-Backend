@@ -23,8 +23,10 @@ class RemoteDevice(id: Int, override val address: SocketAddress, name: String = 
 
     override fun tell(message: Message) {
         super.tell(message)
-        println(message)
-        physicalDevice.send(message)
+        when (message.type) {
+            MessageType.Result, MessageType.ID -> physicalDevice.send(message)
+            else -> { }
+        }
     }
 
     override fun execute() = physicalDevice.send(Message(id, MessageType.Execute))

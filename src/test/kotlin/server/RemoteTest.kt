@@ -6,6 +6,8 @@ import devices.implementations.RemoteDevice
 import devices.implementations.VirtualDevice
 import org.junit.jupiter.api.Test
 import utils.FromKotlin.*
+import java.util.*
+import kotlin.concurrent.schedule
 
 class RemoteTest {
     class Program : AbstractAggregateProgram() {
@@ -35,8 +37,9 @@ class RemoteTest {
 
         Support.devices.finalize(Topology.Ring)
 
-        repeat(3) {
+        Timer().schedule(0, 3000 ) {
             Support.execute()
+            println("------------")
         }
 
         while (true) {

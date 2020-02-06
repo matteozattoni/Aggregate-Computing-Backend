@@ -25,9 +25,12 @@ class LocalExecutionDevice(id: Int, override val address: SocketAddress, name: S
 
     override fun tell(message: Message) {
         super.tell(message)
-        if (message.type == MessageType.Result)
-            physicalDevice.send(message)
+        when (message.type) {
+            MessageType.Result -> physicalDevice.send(message)
+            MessageType.LeaveLightWeight -> goFullWeight()
+            else -> { }
+        }
     }
 
-    fun goFullWeight() = Support.devices.replace(this, RemoteDevice(id, address))
+    private fun goFullWeight() = Support.devices.replace(this, RemoteDevice(id, address))
 }

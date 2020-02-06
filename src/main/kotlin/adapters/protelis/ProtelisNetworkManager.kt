@@ -11,7 +11,7 @@ import org.protelis.vm.NetworkManager
 /**
  * Protelis wrapper for Devices Communication
  */
-class ProtelisNetworkManager(private val device: Device, private val server: Device? = null) : NetworkManager {
+class ProtelisNetworkManager(private val device: Device, private val server: Device = Support) : NetworkManager {
 
     /**
      * Receive the status from this Device's neighbours
@@ -31,15 +31,7 @@ class ProtelisNetworkManager(private val device: Device, private val server: Dev
         if (toSend.isNotEmpty()) {
             val message = Message(device.id, MessageType.Status, HashMap(toSend))
 
-            if (server == null) {
-                //executing on Server
-                Support.devices.getNeighbours(device)
-                    .forEach { it.tell(message) }
-
-            } else {
-                //executing on Client
-                server.tell(Message(device.id, MessageType.SendToNeighbours, message))
-            }
+            server.tell(Message(device.id, MessageType.SendToNeighbours, message))
         }
     }
 }

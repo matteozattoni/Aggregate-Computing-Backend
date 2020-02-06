@@ -30,6 +30,8 @@ object Support : AbstractDevice(SUPPORT_ID, "Support", ::println),
     override fun tell(message: Message) {
         when (message.type) {
             MessageType.SendToNeighbours -> devices.getNeighbours(message.senderUid).forEach { it.tell(message.content as Message) }
+            MessageType.GoLightWeight,
+            MessageType.LeaveLightWeight -> devices.getDevices().single { it.id == message.senderUid }.tell(message)
             else -> { }
         }
     }

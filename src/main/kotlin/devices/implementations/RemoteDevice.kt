@@ -5,6 +5,7 @@ import communication.MessageType
 import adapters.Adapter
 import communication.SocketCommunication
 import devices.interfaces.AbstractDevice
+import devices.interfaces.EmulatedDevice
 import devices.interfaces.InternetDevice
 import server.Support
 import java.net.SocketAddress
@@ -25,12 +26,13 @@ class RemoteDevice(id: Int, override val address: SocketAddress, name: String = 
         super.tell(message)
         when (message.type) {
             MessageType.Execute -> { /* Execute is automatically sent to the Device */ }
+            MessageType.GoLightWeight -> goLightWeight { TODO() }
             else -> physicalDevice.send(message)
         }
     }
 
     override fun execute() = physicalDevice.send(Message(id, MessageType.Execute))
 
-    fun goLightWeight(adapterBuilder: (LocalExecutionDevice) -> Adapter) =
+    private fun goLightWeight(adapterBuilder: (EmulatedDevice) -> Adapter) =
         Support.devices.replace(this, LocalExecutionDevice(id, address, name, adapterBuilder))
 }

@@ -85,7 +85,7 @@ class DeviceManager {
         else
             emptySet()
     }
-    private fun getNeighbours(device: Device, selfIncluded: Boolean = false): Set<Device> {
+    fun getNeighbours(device: Device, selfIncluded: Boolean = false): Set<Device> {
         if (!finalized)
             throw Exception("Cannot get neighbours before finalization")
 
@@ -103,8 +103,11 @@ class DeviceManager {
         replacement.status = toReplace.status
 
         //inherit the neighbours
-        neighbours[replacement] = getNeighbours(toReplace)
+        val oldNeighbours = getNeighbours(toReplace)
         neighbours.remove(toReplace)
+        neighbours[replacement] = oldNeighbours
+
+        //neighbours.replace(replacement, getNeighbours(toReplace))
 
         //update devices with toReplace as neighbour
         neighbours.filter { it.value.contains(toReplace) }.forEach {

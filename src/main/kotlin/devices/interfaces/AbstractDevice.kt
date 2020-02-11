@@ -26,7 +26,7 @@ abstract class AbstractDevice(override val id: Int,
 
     override fun equals(other: Any?): Boolean {
         return when(other) {
-            is AbstractDevice -> id == other.id
+            is AbstractDevice -> id == other.id && this.javaClass == other.javaClass
             else -> super.equals(other)
         }
     }

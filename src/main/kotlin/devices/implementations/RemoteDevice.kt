@@ -3,6 +3,7 @@ package devices.implementations
 import communication.Message
 import communication.MessageType
 import adapters.Adapter
+import adapters.DummyAdapter
 import communication.SocketCommunication
 import devices.interfaces.AbstractDevice
 import devices.interfaces.EmulatedDevice
@@ -26,7 +27,7 @@ class RemoteDevice(id: Int, override val address: SocketAddress, name: String = 
         super.tell(message)
         when (message.type) {
             MessageType.Execute -> { /* Execute is automatically sent to the Device */ }
-            MessageType.GoLightWeight -> goLightWeight { TODO() }
+            MessageType.GoLightWeight -> goLightWeight(::DummyAdapter)
             else -> physicalDevice.send(message)
         }
     }

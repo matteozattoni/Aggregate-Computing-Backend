@@ -2,11 +2,8 @@ package devices.implementations
 
 import communication.Message
 import communication.MessageType
-import adapters.Adapter
-import adapters.DummyAdapter
 import communication.SocketCommunication
 import devices.interfaces.AbstractDevice
-import devices.interfaces.EmulatedDevice
 import devices.interfaces.InternetDevice
 import server.Support
 import java.io.Serializable
@@ -28,13 +25,13 @@ class RemoteDevice(id: Int, override val address: SocketAddress, name: String = 
         super.tell(message)
         when (message.type) {
             MessageType.Execute -> { /* Execute is automatically sent to the Device */ }
-            MessageType.GoLightWeight -> goLightWeight(::DummyAdapter)
+            MessageType.GoLightWeight -> goLightWeight()
             else -> physicalDevice.send(message)
         }
     }
 
     override fun execute() = physicalDevice.send(Message(id, MessageType.Execute))
 
-    private fun goLightWeight(adapterBuilder: (EmulatedDevice) -> Adapter) =
-        Support.devices.replace(this, LocalExecutionDevice(id, address, name, adapterBuilder))
+    private fun goLightWeight() =
+        Support.devices.replace(this, LocalExecutionDevice(id, address, name))
 }

@@ -7,6 +7,7 @@ import communication.SocketCommunication
 import devices.interfaces.AbstractDevice
 import devices.interfaces.EmulatedDevice
 import devices.interfaces.InternetDevice
+import server.Execution
 import server.Support
 import java.io.Serializable
 import java.net.SocketAddress
@@ -15,7 +16,7 @@ import java.net.SocketAddress
  * Device model that executes locally but shows the results on the physical device
  */
 class LocalExecutionDevice(id: Int, override val address: SocketAddress, name: String,
-                           adapterBuilder: (EmulatedDevice) -> Adapter) :
+                           adapterBuilder: (EmulatedDevice) -> Adapter = Execution.adapter) :
         EmulatedDevice(id, name, adapterBuilder, ::println), InternetDevice {
 
     override val physicalDevice = SocketCommunication(this)

@@ -1,10 +1,11 @@
-package server
+package communication
 
 import adapters.scafi.AbstractAggregateProgram
 import adapters.scafi.ScafiAdapter
 import devices.implementations.RemoteDevice
 import devices.implementations.VirtualDevice
 import org.junit.jupiter.api.Test
+import server.*
 import utils.FromKotlin.*
 import java.util.*
 import kotlin.concurrent.schedule
@@ -23,17 +24,19 @@ class RemoteTest {
 
     @Test
     fun test() {
+        Execution.adapter = { ScafiAdapter(it, Program(), Support) }
+
         Support.devices.reset()
 
         Support.physicalDevice.startServer()
 
-        Support.devices.createAndAddDevice { id -> VirtualDevice(id, "", { ScafiAdapter(it, Program(), null) }) }
+        Support.devices.createAndAddDevice(::VirtualDevice)
 
         while (Support.devices.getDevices().none { it is RemoteDevice }) {
             //wait for a Client
         }
 
-        Support.devices.createAndAddDevice { id -> VirtualDevice(id, "", { ScafiAdapter(it, Program(), null) }) }
+        Support.devices.createAndAddDevice(::VirtualDevice)
 
         Support.devices.finalize(Topology.Ring)
 

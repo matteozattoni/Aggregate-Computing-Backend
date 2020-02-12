@@ -32,7 +32,7 @@ class RemoteToLocalTest {
         Assertions.assertTrue(Support.devices.getNeighbours(second).contains(remote))
 
         remote.status.add(Message(-1, MessageType.Result, 3))
-        remote.tell(Message(-1, MessageType.GoLightWeight ))
+        remote.tell(Message(-1, MessageType.GoLightWeight, false))
 
         val local = Support.devices.getDevices().last()
 

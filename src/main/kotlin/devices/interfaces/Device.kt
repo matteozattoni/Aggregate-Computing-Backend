@@ -1,6 +1,7 @@
 package devices.interfaces
 
 import communication.Message
+import java.io.Serializable
 
 /**
  * Basic model for all Devices
@@ -36,5 +37,5 @@ interface Device {
     /**
      * Show a result of computation
      */
-    fun showResult(result: String): Unit
+    fun showResult(result: Serializable): Unit
 }

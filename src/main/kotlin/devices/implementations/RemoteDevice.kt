@@ -9,6 +9,7 @@ import devices.interfaces.AbstractDevice
 import devices.interfaces.EmulatedDevice
 import devices.interfaces.InternetDevice
 import server.Support
+import java.io.Serializable
 import java.net.SocketAddress
 
 /**
@@ -19,7 +20,7 @@ class RemoteDevice(id: Int, override val address: SocketAddress, name: String = 
 
     override val physicalDevice = SocketCommunication(this)
 
-    override fun showResult(result: String) {
+    override fun showResult(result: Serializable) {
         physicalDevice.send(Message(id, MessageType.Result, result))
     }
 

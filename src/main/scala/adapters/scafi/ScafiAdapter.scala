@@ -34,12 +34,11 @@ case class ScafiAdapter(device: Device, program: AggregateProgram, server: Devic
 
     val result = program(factory.context(device.getId, exports, sensors))
 
-    device.showResult(s"$device: " + result.root())
-
     //tell my export to my neighbours (myself included)
     val toSend = new Message(device.getId, MessageType.Result, ExportWrapper(result))
 
     device.tell(toSend)
+    device.tell(new Message(device.getId, MessageType.Show, result.root()))
     server.tell(new Message(device.getId, MessageType.SendToNeighbours, toSend))
   }
 

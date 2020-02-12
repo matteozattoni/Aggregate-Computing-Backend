@@ -5,6 +5,7 @@ import communication.MessageType
 import communication.SocketCommunication
 import devices.interfaces.AbstractDevice
 import devices.interfaces.InternetDevice
+import java.io.Serializable
 import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.SocketAddress
@@ -36,7 +37,7 @@ object Support : AbstractDevice(SUPPORT_ID, "Support", ::println),
         }
     }
 
-    override fun showResult(result: String) {
+    override fun showResult(result: Serializable) {
         //unused
     }
 }

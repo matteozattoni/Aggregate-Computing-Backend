@@ -8,6 +8,7 @@ import devices.interfaces.AbstractDevice
 import devices.interfaces.EmulatedDevice
 import devices.interfaces.InternetDevice
 import server.Support
+import java.io.Serializable
 import java.net.SocketAddress
 
 /**
@@ -19,14 +20,14 @@ class LocalExecutionDevice(id: Int, override val address: SocketAddress, name: S
 
     override val physicalDevice = SocketCommunication(this)
 
-    override fun showResult(result: String) {
+    override fun showResult(result: Serializable) {
         physicalDevice.send(Message(id, MessageType.Result, result))
     }
 
     override fun tell(message: Message) {
         super.tell(message)
         when (message.type) {
-            MessageType.Result -> physicalDevice.send(message)
+            MessageType.Result, MessageType.Show -> physicalDevice.send(message)
             MessageType.LeaveLightWeight -> goFullWeight()
             else -> { }
         }

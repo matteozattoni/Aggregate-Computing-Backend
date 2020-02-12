@@ -1,6 +1,5 @@
 package devices.implementations
 
-import com.sun.org.apache.xpath.internal.operations.Bool
 import communication.Message
 import communication.MessageType
 import communication.SocketCommunication

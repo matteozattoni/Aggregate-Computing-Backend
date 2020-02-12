@@ -3,9 +3,12 @@ package server
 import devices.interfaces.Device
 import utils.ToKotlin
 
+/**
+ * Shortcuts to use Support from Scala
+ */
 object ScalaSupport {
   /**
-   * shortcut for Scala API
+   * shortcut to read Support.devices for Scala API
    * @return the DeviceManager
    */
   def devices: DeviceManager = Support.INSTANCE.getDevices

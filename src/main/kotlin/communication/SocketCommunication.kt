@@ -79,23 +79,15 @@ class SocketCommunication(override val device: InternetDevice): Communication<As
     }
 
      override fun serverCallback(connection: AsynchronousSocketChannel) {
-            val address = connection.remoteAddress
             val message = Support.physicalDevice.extractMessage(connection)
 
             when (message.type) {
                 MessageType.Join -> {
-                    val ip = address.toString().trim('/').split(':').first()
+                    val ip = connection.remoteAddress.toString().trim('/').split(':').first()
                     val port = message.content.toString().toInt()
-                    val joining = Support.devices.createAndAddDevice { id ->
-                        RemoteDevice(
-                            id,
-                            InetSocketAddress(InetAddress.getByName(ip), port)
-                        )
-                    }
-                    //tell to the physical device the assigned ID
-                    joining.tell(Message(Support.id, MessageType.ID, joining.id))
+                    val socketAddress = InetSocketAddress(InetAddress.getByName(ip), port)
 
-                    println("$ip:$port joined with id ${joining.id}")
+                    Support.tell(Message(message.senderUid, MessageType.Join, socketAddress))
                 }
                 else -> Support.tell(message)
             }

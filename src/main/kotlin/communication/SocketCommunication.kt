@@ -79,19 +79,20 @@ class SocketCommunication(override val device: InternetDevice): Communication<As
     }
 
      override fun serverCallback(connection: AsynchronousSocketChannel) {
-            val message = Support.physicalDevice.extractMessage(connection)
+         val remoteAddress = connection.remoteAddress
+         val message = Support.physicalDevice.extractMessage(connection)
 
-            when (message.type) {
-                MessageType.Join -> {
-                    val ip = connection.remoteAddress.toString().trim('/').split(':').first()
-                    val port = message.content.toString().toInt()
-                    val socketAddress = InetSocketAddress(InetAddress.getByName(ip), port)
+         when (message.type) {
+            MessageType.Join -> {
+                val ip = remoteAddress.toString().trim('/').split(':').first()
+                val port = message.content.toString().toInt()
+                val socketAddress = InetSocketAddress(InetAddress.getByName(ip), port)
 
-                    Support.tell(Message(message.senderUid, MessageType.Join, socketAddress))
-                }
-                else -> Support.tell(message)
+                Support.tell(Message(message.senderUid, MessageType.Join, socketAddress))
             }
-        }
+            else -> Support.tell(message)
+         }
+    }
 
 
 }

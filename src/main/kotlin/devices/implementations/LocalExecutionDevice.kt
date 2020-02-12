@@ -34,5 +34,8 @@ class LocalExecutionDevice(id: Int, override val address: SocketAddress, name: S
         }
     }
 
-    private fun goFullWeight() = Support.devices.replace(this, RemoteDevice(id, address, name))
+    private fun goFullWeight() {
+        Support.devices.replace(this, RemoteDevice(id, address, name))
+        println("$id left lightweight")
+    }
 }

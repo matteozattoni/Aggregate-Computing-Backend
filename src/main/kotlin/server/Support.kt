@@ -41,7 +41,9 @@ object Support : AbstractDevice(SUPPORT_ID, "Support", ::println),
             }
             MessageType.SendToNeighbours -> devices.getNeighbours(message.senderUid).forEach { it.tell(message.content as Message) }
             MessageType.GoLightWeight,
-            MessageType.LeaveLightWeight -> devices.getDevices().single { it.id == message.senderUid }.tell(message)
+            MessageType.LeaveLightWeight ->
+                devices.getDevices().single { it.id == message.senderUid }
+                    .tell(Message(message.senderUid, message.type, false))
             else -> { }
         }
     }

@@ -1,5 +1,6 @@
 package devices.implementations
 
+import com.sun.org.apache.xpath.internal.operations.Bool
 import communication.Message
 import communication.MessageType
 import communication.SocketCommunication
@@ -25,13 +26,21 @@ class RemoteDevice(id: Int, override val address: SocketAddress, name: String = 
         super.tell(message)
         when (message.type) {
             MessageType.Execute -> { /* Execute is automatically sent to the Device */ }
-            MessageType.GoLightWeight -> goLightWeight()
+            MessageType.GoLightWeight -> {
+                //the content is true only on Clients
+                if (message.content as Boolean)
+                    physicalDevice.send(message)
+                else
+                    goLightWeight()
+            }
             else -> physicalDevice.send(message)
         }
     }
 
     override fun execute() = physicalDevice.send(Message(id, MessageType.Execute))
 
-    private fun goLightWeight() =
+    private fun goLightWeight() {
         Support.devices.replace(this, LocalExecutionDevice(id, address, name))
+        println("$id went lightweight")
+    }
 }

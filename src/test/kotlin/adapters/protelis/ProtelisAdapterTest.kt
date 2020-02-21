@@ -8,6 +8,8 @@ import org.protelis.vm.NetworkManager
 import server.Execution
 import server.Topology
 
+const val protelisModuleName = "hello"
+
 internal class ProtelisAdapterTest {
     class HelloContext(private val device: Device, networkManager: NetworkManager) : ProtelisContext(device, networkManager) {
         override fun instance(): ProtelisContext =
@@ -18,8 +20,6 @@ internal class ProtelisAdapterTest {
     }
 
     init {
-        val protelisModuleName = "hello"
-
         Execution.adapter = { ProtelisAdapter(it, protelisModuleName, ::HelloContext) }
 
         //useful to not make adapter tests interact with each other

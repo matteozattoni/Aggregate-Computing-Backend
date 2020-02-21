@@ -5,11 +5,12 @@ import adapters.Adapter
 import org.protelis.lang.ProtelisLoader
 import org.protelis.vm.NetworkManager
 import org.protelis.vm.ProtelisVM
+import server.Support
 
 class ProtelisAdapter(override val device: Device,
                       moduleName: String,
                       contextBuilder: (Device, NetworkManager) -> ProtelisContext = ::SimpleProtelisContext,
-                      networkManagerBuilder: (Device) -> NetworkManager = { ProtelisNetworkManager(it) } ) : Adapter {
+                      server: Device = Support) : Adapter {
 
     private val vm: ProtelisVM
     private val networkManager: NetworkManager
@@ -17,7 +18,7 @@ class ProtelisAdapter(override val device: Device,
 
     init {
         val program = ProtelisLoader.parse(moduleName)
-        networkManager = networkManagerBuilder(device)
+        networkManager = ProtelisNetworkManager(device, server)
         context = contextBuilder(device, networkManager)
         vm = ProtelisVM(program, context)
     }

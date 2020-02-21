@@ -22,7 +22,7 @@ class LocalExecutionDevice(id: Int, override val address: SocketAddress, name: S
     override val physicalDevice = SocketCommunication(this)
 
     override fun showResult(result: Serializable) {
-        physicalDevice.send(Message(id, MessageType.Result, result))
+        physicalDevice.send(Message(id, MessageType.Show, result))
     }
 
     override fun tell(message: Message) {

@@ -2,9 +2,10 @@ package devices.interfaces
 
 import communication.Message
 import communication.MessageType
+import org.protelis.lang.datatype.DeviceUID
 import java.io.Serializable
 
-abstract class AbstractDevice(override val id: Int,
+abstract class AbstractDevice(override val id: DeviceUID,
                               override val name: String,
                               private val onResult: (Serializable) -> Any) : Device {
     override var status: MutableSet<Message> = mutableSetOf()
@@ -42,6 +43,6 @@ abstract class AbstractDevice(override val id: Int,
     override fun toString(): String = if (name.isNotEmpty()) name else id.toString()
 
     override fun hashCode(): Int {
-        return id
+        return id.hashCode()
     }
 }

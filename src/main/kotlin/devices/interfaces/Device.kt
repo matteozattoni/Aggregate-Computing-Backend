@@ -1,6 +1,7 @@
 package devices.interfaces
 
 import communication.Message
+import org.protelis.lang.datatype.DeviceUID
 import java.io.Serializable
 
 /**
@@ -10,7 +11,7 @@ interface Device {
     /**
      * The unique identifier of this Device
      */
-    val id: Int
+    val id: DeviceUID
 
     /**
      * a readable name to better recognize this device

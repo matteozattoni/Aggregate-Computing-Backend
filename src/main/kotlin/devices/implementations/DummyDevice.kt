@@ -2,17 +2,17 @@ package devices.implementations
 
 import communication.Message
 import devices.interfaces.AbstractDevice
-import server.Execution
+import org.protelis.lang.datatype.DeviceUID
 
 /**
  * Fake Device that does nothing
  * Used mainly for test purposes
  */
-class DummyDevice(id: Int, name: String) : AbstractDevice(id, name, ::println) {
+class DummyDevice(id: DeviceUID, name: String) : AbstractDevice(id, name, ::println) {
     /**
      * Useful to speed up the creation of devices using the :: notation
      */
-    constructor(id: Int): this(id, "")
+    constructor(id: DeviceUID): this(id, "")
 
     override fun execute() {
 

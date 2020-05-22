@@ -1,50 +1,77 @@
 package devices
 
-import adapters.DummyAdapter
 import communication.Message
 import communication.MessageType
-import devices.implementations.DummyDevice
-import devices.implementations.LocalExecutionDevice
-import devices.implementations.RemoteDevice
+import communication.implements.LocalNetworkController
+import devices.implementations.VirtualDevice
 import devices.interfaces.Device
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
+import org.protelis.lang.datatype.DeviceUID
+import server.DefaultServerFactory
 import server.Support
-import server.Topology
-import java.net.InetSocketAddress
+import java.net.InetAddress
+import java.util.concurrent.Semaphore
+import java.util.concurrent.TimeUnit
 
 class RemoteToLocalTest {
-    private fun createRemoteDevice(id: Int) =
-        RemoteDevice(id, InetSocketAddress("localhost",2000), "Devv")
+    private val factory = DefaultServerFactory()
+    private val localController = LocalNetworkController(Support, serverAddress = InetAddress.getLocalHost(), serverPort = 2001)
+
+    private lateinit var server: Device
+    private lateinit var device: Device
+
+    @BeforeEach
+    fun start(){
+        localController.setCommunicationForServer(Support)
+        Support.startServer()
+    }
+
+    @AfterEach
+    fun stop(){
+        Support.stopServer()
+    }
 
     @Test
     fun test() {
-        Support.devices.reset()
+        Support.reset()
+        val waitServerAndID = Semaphore(-1)
+        val resultArrived = Semaphore(0)
+        val executeArrived = Semaphore(0)
 
-        Support.devices.createAndAddDevice(::DummyDevice)
-        val second = Support.devices.createAndAddDevice(::DummyDevice)
-        val remote = Support.devices.createAndAddDevice(::createRemoteDevice)
+        localController.getRemoteServer({
+            server = it
+            it.tell(Message(factory.createNewID(), MessageType.Join))
+            waitServerAndID.release()
+        }) {
+            if (it.type == MessageType.ID) {
+                device = VirtualDevice(it.content as DeviceUID, "Dummy")
+                waitServerAndID.release()
+            }
+            if (it.type == MessageType.Result) {
+                Assertions.assertTrue(it.content as String == "des")
+                resultArrived.release()
+            }
+            if (it.type == MessageType.Execute){
+                executeArrived.release()
+            }
 
-        Support.devices.finalize(Topology.Ring)
+        }
 
-        val oldNeigh = Support.devices.getNeighbours(remote)
+        Assertions.assertTrue(waitServerAndID.tryAcquire(8, TimeUnit.SECONDS))
+        server.tell(Message(device.id, MessageType.GoLightWeight, true))
+        Thread.sleep(2000)
+        server.tell(
+            Message(
+                factory.createNewID(), MessageType.SendToNeighbours,
+                Message(factory.createNewID(), MessageType.Result, "des")
+            )
+        )
+        Assertions.assertTrue(resultArrived.tryAcquire(8, TimeUnit.SECONDS))
+        server.tell(Message(device.id, MessageType.LeaveLightWeight, false))
+        Thread.sleep(2000)
 
-        Assertions.assertTrue(Support.devices.getNeighbours(second).contains(remote))
-
-        remote.status.add(Message(-1, MessageType.Result, 3))
-        remote.tell(Message(-1, MessageType.GoLightWeight, false))
-
-        val local = Support.devices.getDevices().last()
-
-        Assertions.assertTrue(local is LocalExecutionDevice)
-        Assertions.assertEquals(remote.id, local.id)
-        Assertions.assertEquals(remote.name, local.name)
-        Assertions.assertEquals(remote.status, local.status)
-        Assertions.assertTrue(Support.devices.getDevices().contains(local))
-        Assertions.assertFalse(Support.devices.getDevices().contains(remote))
-        Assertions.assertEquals(Support.devices.getNeighbours(local), oldNeigh)
-        Assertions.assertEquals(Support.devices.getNeighbours(remote), setOf<Device>())
-        Assertions.assertTrue(Support.devices.getNeighbours(second).contains(local))
-        Assertions.assertFalse(Support.devices.getNeighbours(second).contains(remote))
+        server.tell(Message(factory.createNewID(), MessageType.SendToNeighbours,
+        Message(factory.createNewID(), MessageType.Execute)))
+        Assertions.assertTrue(executeArrived.tryAcquire(8, TimeUnit.SECONDS))
     }
 }

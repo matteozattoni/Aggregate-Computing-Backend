@@ -19,7 +19,7 @@ class ProtelisNetworkManager(private val device: Device, private val server: Dev
     @Suppress("UNCHECKED_CAST")
     override fun getNeighborState(): Map<DeviceUID, Map<CodePath, Any>> {
         return device.status
-            .map { (IntUID(it.senderUid) as DeviceUID) to (it.content as Map<CodePath, Any>) }
+            .map { it.senderUid to (it.content as Map<CodePath, Any>) }
             .toMap()
             .apply { device.status.clear() }
     }

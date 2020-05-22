@@ -14,7 +14,7 @@ abstract class ProtelisContext(private val device: Device, networkManager: Netwo
 
     override fun nextRandomDouble(): Double = Math.random()
 
-    override fun getDeviceUID(): DeviceUID = IntUID(device.id)
+    override fun getDeviceUID(): DeviceUID = device.id
 
     override fun getCurrentTime(): Number =  System.currentTimeMillis()
 }

@@ -8,6 +8,7 @@ import devices.interfaces.EmulatedDevice
 import devices.interfaces.RemoteDevice
 import org.protelis.lang.datatype.DeviceUID
 import server.interfaces.ServerFactory
+import devices.implementations.SupportDevice
 import java.io.Serializable
 
 
@@ -30,4 +31,8 @@ internal class DefaultServerFactory: ServerFactory {
         return VirtualDevice(uid, name, adapter, onResult)
     }
 
+    override fun createSupport(): SupportDevice? {
+        val id = createNewID()
+        return SupportDevice(id, factory = this)
+    }
 }

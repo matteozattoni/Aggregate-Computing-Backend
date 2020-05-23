@@ -3,10 +3,10 @@ package devices.implementations
 import communication.Message
 import communication.MessageType
 import communication.interfaces.NetworkCommunication
+import controller.NetworkController
 import devices.interfaces.AbstractDevice
 import devices.interfaces.RemoteDevice
 import org.protelis.lang.datatype.DeviceUID
-import server.Support
 
 
 open class PeerDevice(
@@ -42,7 +42,7 @@ open class PeerDevice(
     }
 
     private fun goLightWeight() {
-        Support.replaceHosted(
+        NetworkController.getNetworkController().support?.replaceHosted(
             this, LocalExecutionDevice(
                 id, name, physicalDevice!!
             )

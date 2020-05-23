@@ -3,19 +3,46 @@ package controller
 import communication.Message
 import communication.interfaces.CommunicationController
 import devices.interfaces.RemoteDevice
-import server.Support
+import server.DefaultServerFactory
+import server.interfaces.ServerFactory
+import devices.implementations.SupportDevice
 import java.util.*
 
 
-open class NetworkController(supportEnabled: Boolean) {
+class NetworkController private constructor(serverFactory: ServerFactory) {
 
-    private val serverSupport: () -> Support? = { if (supportEnabled) Support else null}
+    companion object {
+        @Volatile
+        private lateinit var networkController: NetworkController
+
+        fun createNetworkController(serverFactory: ServerFactory = DefaultServerFactory()): NetworkController{
+            if (::networkController.isInitialized)
+                return networkController
+
+            synchronized(this) {
+                if (::networkController.isInitialized)
+                    return networkController
+                val controller = NetworkController(serverFactory)
+                networkController = controller
+                return controller
+            }
+        }
+
+        @Throws(UninitializedPropertyAccessException::class)
+        fun getNetworkController(): NetworkController{
+            if (!::networkController.isInitialized){
+                throw UninitializedPropertyAccessException("property: networkController is not initialized yet.")
+            }
+            return networkController
+        }
+    }
+
+    val support: SupportDevice? = serverFactory.createSupport()
 
     private val listOfController =
         Collections.synchronizedList(mutableListOf<CommunicationController>())
 
     fun startServer() {
-        val support = serverSupport()
         if (support != null) {
             listOfController.iterator().forEach {
                 it.setCommunicationForServer(support)
@@ -45,12 +72,11 @@ open class NetworkController(supportEnabled: Boolean) {
 
     fun stopAllService() {
         stopOfferServer()
-        serverSupport()?.stopServer()
+        support?.stopServer()
     }
 
     fun addController(controllerInterface: CommunicationController) {
-        // the support now is exposed
-        controllerInterface.support = serverSupport()
+        controllerInterface.support = support
         listOfController.add(controllerInterface)
     }
 

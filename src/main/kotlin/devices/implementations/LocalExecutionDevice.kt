@@ -4,10 +4,10 @@ import adapters.Adapter
 import communication.Message
 import communication.MessageType
 import communication.interfaces.NetworkCommunication
+import controller.NetworkController
 import devices.interfaces.EmulatedDevice
 import org.protelis.lang.datatype.DeviceUID
 import server.Execution
-import server.Support
 import java.io.Serializable
 
 /**
@@ -31,7 +31,8 @@ internal class LocalExecutionDevice(id: DeviceUID, name: String, private val phy
     }
 
     private fun goFullWeight() {
-        Support.replaceHosted(this, PeerDevice(id, name, physicalDevice))
+        NetworkController.getNetworkController().support?.replaceHosted(
+            this, PeerDevice(id, name, physicalDevice))
         println("$id left lightweight")
     }
 }

@@ -3,7 +3,7 @@ package server
 import devices.interfaces.Device
 import java.util.*
 
-internal class DeviceManager {
+class DeviceManager {
 
     private val hostedDevices: MutableList<Device> = Collections.synchronizedList(mutableListOf())
     private val remoteDevices: MutableList<Device> = Collections.synchronizedList(mutableListOf())

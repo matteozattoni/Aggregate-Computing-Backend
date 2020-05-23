@@ -2,15 +2,15 @@ package adapters.protelis
 
 import devices.interfaces.Device
 import adapters.Adapter
+import controller.NetworkController
 import org.protelis.lang.ProtelisLoader
 import org.protelis.vm.NetworkManager
 import org.protelis.vm.ProtelisVM
-import server.Support
 
 class ProtelisAdapter(override val device: Device,
                       moduleName: String,
                       contextBuilder: (Device, NetworkManager) -> ProtelisContext = ::SimpleProtelisContext,
-                      server: Device = Support) : Adapter {
+                      server: Device = NetworkController.getNetworkController().support!!) : Adapter {
 
     private val vm: ProtelisVM
     private val networkManager: NetworkManager

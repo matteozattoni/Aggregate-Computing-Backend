@@ -1,8 +1,8 @@
 package adapters.protelis
 
-import server.Support
 import communication.Message
 import communication.MessageType
+import controller.NetworkController
 import devices.interfaces.Device
 import org.protelis.lang.datatype.DeviceUID
 import org.protelis.vm.CodePath
@@ -11,7 +11,9 @@ import org.protelis.vm.NetworkManager
 /**
  * Protelis wrapper for Devices Communication
  */
-class ProtelisNetworkManager(private val device: Device, private val server: Device = Support) : NetworkManager {
+class ProtelisNetworkManager(private val device: Device,
+                             private val server: Device = NetworkController.getNetworkController().support!!)
+    : NetworkManager {
 
     /**
      * Receive the status from this Device's neighbours

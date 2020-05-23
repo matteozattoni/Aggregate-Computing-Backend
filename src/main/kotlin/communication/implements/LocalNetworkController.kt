@@ -6,6 +6,7 @@ import communication.interfaces.CommunicationController
 import devices.interfaces.RemoteDevice
 import server.DefaultServerFactory
 import server.interfaces.ServerFactory
+import devices.implementations.SupportDevice
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.lang.Exception
@@ -17,7 +18,7 @@ import kotlin.concurrent.thread
 
 
 class LocalNetworkController(
-    override var support: RemoteDevice? = null,
+    override var support: SupportDevice? = null,
     private var factory: ServerFactory = DefaultServerFactory(),
     private val serverAddress: InetAddress,
     private val serverPort: Int

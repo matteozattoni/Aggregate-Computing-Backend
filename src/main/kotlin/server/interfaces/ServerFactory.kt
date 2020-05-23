@@ -1,6 +1,7 @@
 package server.interfaces
 
 import adapters.Adapter
+import devices.implementations.SupportDevice
 import devices.interfaces.EmulatedDevice
 import devices.interfaces.RemoteDevice
 import org.protelis.lang.datatype.DeviceUID
@@ -13,5 +14,5 @@ interface ServerFactory {
     fun createRemoteDevice(uid: DeviceUID): RemoteDevice
     fun createEmulatedDevice(uid: DeviceUID, name: String, adapter: (EmulatedDevice) -> Adapter = Execution.adapter,
                              onResult: (Serializable) -> Any = ::println): EmulatedDevice
-
+    fun createSupport(): SupportDevice?
 }

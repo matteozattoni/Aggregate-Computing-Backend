@@ -8,32 +8,37 @@ import devices.interfaces.Device
 import org.junit.jupiter.api.*
 import org.protelis.lang.datatype.DeviceUID
 import server.DefaultServerFactory
-import server.Support
+import devices.implementations.SupportDevice
 import java.net.InetAddress
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
 
-class RemoteToLocalTest {
+internal class RemoteToLocalTest {
     private val factory = DefaultServerFactory()
-    private val localController = LocalNetworkController(Support, serverAddress = InetAddress.getLocalHost(), serverPort = 2001)
+    private val supportServer = SupportDevice(
+        factory.createNewID(),
+        "support server",
+        factory = factory
+    )
+    private val localController = LocalNetworkController(supportServer, serverAddress = InetAddress.getLocalHost(), serverPort = 2001)
 
     private lateinit var server: Device
     private lateinit var device: Device
 
     @BeforeEach
     fun start(){
-        localController.setCommunicationForServer(Support)
-        Support.startServer()
+        localController.setCommunicationForServer(supportServer)
+        supportServer.startServer()
     }
 
     @AfterEach
     fun stop(){
-        Support.stopServer()
+        supportServer.stopServer()
     }
 
     @Test
     fun test() {
-        Support.reset()
+        supportServer.reset()
         val waitServerAndID = Semaphore(-1)
         val resultArrived = Semaphore(0)
         val executeArrived = Semaphore(0)

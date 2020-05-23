@@ -5,7 +5,6 @@ import adapters.protelis.ProtelisAdapter
 import adapters.protelis.ProtelisContext
 import adapters.protelis.ServerUID
 import communication.implements.LocalNetworkController
-import devices.implementations.PeerDevice
 import devices.interfaces.Device
 import devices.interfaces.EmulatedDevice
 
@@ -14,10 +13,7 @@ import org.junit.jupiter.api.Test
 import org.protelis.lang.datatype.DeviceUID
 import org.protelis.vm.NetworkManager
 import server.DefaultServerFactory
-import server.DeviceManager
-import server.interfaces.NetworkInformation
-import server.Support
-import server.interfaces.ServerFactory
+import devices.implementations.SupportDevice
 
 import java.io.File
 
@@ -27,45 +23,48 @@ import java.net.InetSocketAddress
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ProtelisRemoteTest {
+internal class ProtelisRemoteTest {
 
     private lateinit var localNetworkController: LocalNetworkController
     private val address = InetAddress.getLoopbackAddress()
     private lateinit var adapterTest: ProtelisAdapterTest
-    private lateinit var serverDummy1: ServerDummyDevice
-    private lateinit var serverDummy2: ServerDummyDevice
+    private lateinit var serverDummy1: ProtelisAdapterTest.SupportDeviceTest
+    private lateinit var serverDummy2: ProtelisAdapterTest.SupportDeviceTest
     private lateinit var serverDummy1Controller: LocalNetworkController
     private lateinit var serverDummy2Controller: LocalNetworkController
+
+    private val factory = DefaultServerFactory()
+    private val supportServer = ProtelisAdapterTest.SupportDeviceTest(factory.createNewID(), "server Dummy 2", factory = factory)
 
     private val serverDummy1Address = InetSocketAddress(address, 2004)
     private val serverDummy2Address = InetSocketAddress(address, 2006)
 
     @BeforeEach
     fun startServer(){
-        serverDummy1 = ServerDummyDevice("ServerDummy1")
-        serverDummy2 = ServerDummyDevice("ServerDummy2")
-        adapterTest = ProtelisAdapterTest(serverDummy1, serverDummy2)
-        localNetworkController = LocalNetworkController(Support, serverAddress = address, serverPort =  2001)
+        serverDummy1 = ProtelisAdapterTest.SupportDeviceTest(factory.createNewID(), "server Dummy 1", factory = factory)
+        serverDummy2 = ProtelisAdapterTest.SupportDeviceTest(factory.createNewID(), "server Dummy 2", factory = factory)
+        adapterTest = ProtelisAdapterTest(serverDummy1, serverDummy2, supportServer)
+        localNetworkController = LocalNetworkController(supportServer, serverAddress = address, serverPort =  2001)
         serverDummy1Controller = LocalNetworkController(serverDummy1, serverAddress = address, serverPort =  2004)
         serverDummy2Controller = LocalNetworkController(serverDummy2, serverAddress = address, serverPort = 2006)
 
         // set Server Communication
-        localNetworkController.setCommunicationForServer(Support)
+        localNetworkController.setCommunicationForServer(supportServer)
         serverDummy1Controller.setCommunicationForServer(serverDummy1)
         serverDummy2Controller.setCommunicationForServer(serverDummy2)
 
         // start server
-        Support.startServer()
+        supportServer.startServer()
         serverDummy1.startServer()
         serverDummy2.startServer()
     }
 
     @AfterEach
     fun stopServer(){
-        Support.stopServer()
+        supportServer.stopServer()
         serverDummy1.stopServer()
         serverDummy2.stopServer()
-        Support.reset()
+        supportServer.reset()
     }
 
     @Test
@@ -116,7 +115,7 @@ class ProtelisRemoteTest {
     private fun executeProgram(times: Int) {
         val executeThread = Thread(Runnable {
             repeat(times) {
-                Support.execute()
+                supportServer.execute()
                 serverDummy1.execute()
                 serverDummy2.execute()
                 Thread.sleep(5000)
@@ -126,7 +125,9 @@ class ProtelisRemoteTest {
         executeThread.join()
     }
 
-    private class ProtelisAdapterTest(private val serverDummy1: ServerDummyDevice, private val serverDummy2: ServerDummyDevice) {
+    private class ProtelisAdapterTest(private val serverDummy1: SupportDeviceTest,
+                                      private val serverDummy2: SupportDeviceTest,
+                                      private val supportServer: SupportDeviceTest) {
 
         class HelloContext(private val device: Device, networkManager: NetworkManager) : ProtelisContext(device, networkManager) {
             override fun instance(): ProtelisContext =
@@ -144,7 +145,7 @@ class ProtelisRemoteTest {
 
         init {
             val adapterSupport: (EmulatedDevice) -> Adapter = { ProtelisAdapter(it, readFromRaw(),
-                ProtelisAdapterTest::HelloContext
+                ProtelisAdapterTest::HelloContext, supportServer
             )}
             val adapterDummy1: (EmulatedDevice) -> Adapter = { ProtelisAdapter(it, readFromRaw(),
                 ProtelisAdapterTest::HelloContext, serverDummy1)}
@@ -159,103 +160,27 @@ class ProtelisRemoteTest {
 
             repeat(namesSupport.size) { n ->
                 val device = factory.createEmulatedDevice(ServerUID(), namesSupport[n], adapterSupport)
-                Support.deviceManager.addHostedDevice(device)
+                supportServer.deviceManagerPublic.addHostedDevice(device)
                  if (n == 0)
                     (device.adapter as ProtelisAdapter).context.executionEnvironment.put("leader", true)
             }
 
             repeat(namesDummy1.size) { n ->
                 val device = factory.createEmulatedDevice(ServerUID(), namesDummy1[n], adapterDummy1)
-                serverDummy1.deviceManager.addHostedDevice(device)
+                serverDummy1.deviceManagerPublic.addHostedDevice(device)
                 //if (n==0)
                     //(device.adapter as ProtelisAdapter).context.executionEnvironment.put("leader", true)
             }
 
             repeat(namesDummy2.size) { n ->
                 val device = factory.createEmulatedDevice(ServerUID(), namesDummy2[n], adapterDummy2)
-                serverDummy2.deviceManager.addHostedDevice(device)
+                serverDummy2.deviceManagerPublic.addHostedDevice(device)
             }
+        }
+
+        internal class SupportDeviceTest(id: DeviceUID, name: String, factory: DefaultServerFactory = DefaultServerFactory()): SupportDevice(id,name,factory= factory){
+            val deviceManagerPublic = super.deviceManager
         }
     }
 
-    internal class ServerDummyDevice(name: String): PeerDevice(ServerUID(), name) {
-        private var serverFactory: ServerFactory = DefaultServerFactory()
-        internal val deviceManager = DeviceManager()
-
-        fun setServerFactory(serverFactory: ServerFactory) {
-            this.serverFactory = serverFactory
-        }
-
-        @Suppress("NAME_SHADOWING")
-        override fun tell(message: Message) {
-            when (message.type) {
-                MessageType.Join -> {
-                    val networkInformation = message.content as NetworkInformation
-                    val message = networkInformation.getContent() as Message
-                    val content = message.content as DeviceUID?
-                    val device = serverFactory.createRemoteDevice(content ?: serverFactory.createNewID())
-                    deviceManager.addHostedDevice(device)
-                    networkInformation.setPhysicalDevice(device)
-                    device.tell(Message(this.id, MessageType.ID, device.id))
-
-                }
-
-                MessageType.OfferServer -> {
-                    val networkInformation = message.content as NetworkInformation
-                    val message = networkInformation.getContent() as Message
-                    val uidServer = message.content as DeviceUID
-                    val device = serverFactory.createRemoteDevice(uidServer)
-                    deviceManager.addRemoteDevice(device)
-                    networkInformation.setPhysicalDevice(device)
-                    // reply nothing
-                }
-
-                MessageType.SendToNeighbours -> {
-                    deviceManager.getHostedDevices().forEach {
-                        if (it.id != message.senderUid)
-                            synchronized(it) { it.tell(message.content as Message) }
-                    }
-
-                    val device = deviceManager.getRemoteDevices().find { it.id == message.senderUid }
-                    if (device == null) {
-                        //the message came from a hosted client (can't be both)
-                        deviceManager.getRemoteDevices().forEach {
-                            it.tell(Message(id, MessageType.SendToNeighbours, message.content))
-                        }
-                    }
-                }
-                MessageType.GoLightWeight,
-                MessageType.LeaveLightWeight -> {
-                    deviceManager.getHostedDevices().single { it.id == message.senderUid }
-                        .tell(Message(message.senderUid, message.type, false))
-                }
-                else -> {
-                }
-            }
-
-        }
-
-        override fun execute() {
-            deviceManager.getHostedDevices().forEach { synchronized(it) { it.execute() } }
-        }
-
-        fun replaceHosted(replace: Device, with: Device) {
-            with.status = replace.status
-            deviceManager.removeDevice(replace)
-            deviceManager.addHostedDevice(with)
-        }
-
-        fun reset() {
-            deviceManager.reset()
-        }
-
-        fun startServer() {
-            physicalDevice?.startServer()
-        }
-
-        fun stopServer() {
-            physicalDevice?.stopServer()
-            physicalDevice = null
-        }
-    }
 }

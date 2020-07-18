@@ -4,7 +4,7 @@ import adapters.Adapter
 import adapters.protelis.ProtelisAdapter
 import adapters.protelis.ProtelisContext
 import adapters.protelis.ServerUID
-import communication.implements.LocalNetworkController
+import communication.concrete.localipv.LocalNetworkController
 import devices.interfaces.Device
 import devices.interfaces.EmulatedDevice
 

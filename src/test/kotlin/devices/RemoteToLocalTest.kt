@@ -2,7 +2,7 @@ package devices
 
 import communication.Message
 import communication.MessageType
-import communication.implements.LocalNetworkController
+import communication.concrete.localipv.LocalNetworkController
 import devices.implementations.VirtualDevice
 import devices.interfaces.Device
 import org.junit.jupiter.api.*

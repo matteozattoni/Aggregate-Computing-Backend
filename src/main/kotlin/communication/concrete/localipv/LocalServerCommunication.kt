@@ -1,7 +1,8 @@
-package communication.implements
+package communication.concrete.localipv
 
 import communication.Message
 import communication.MessageType
+import communication.concrete.localipv.LocalNetworkInformation
 import communication.interfaces.NetworkCommunication
 import devices.interfaces.RemoteDevice
 import java.io.ObjectInputStream

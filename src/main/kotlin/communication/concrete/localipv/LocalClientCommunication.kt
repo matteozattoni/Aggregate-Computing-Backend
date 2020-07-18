@@ -1,4 +1,4 @@
-package communication.implements
+package communication.concrete.localipv
 
 import communication.Message
 import communication.interfaces.NetworkCommunication

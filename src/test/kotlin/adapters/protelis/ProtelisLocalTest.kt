@@ -1,6 +1,6 @@
 package adapters.protelis
 
-import communication.implements.LocalNetworkController
+import communication.concrete.localipv.LocalNetworkController
 import devices.interfaces.Device
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll

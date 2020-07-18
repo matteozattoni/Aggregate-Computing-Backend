@@ -44,9 +44,21 @@ internal class ProtelisRemoteTest {
         serverDummy1 = ProtelisAdapterTest.SupportDeviceTest(factory.createNewID(), "server Dummy 1", factory = factory)
         serverDummy2 = ProtelisAdapterTest.SupportDeviceTest(factory.createNewID(), "server Dummy 2", factory = factory)
         adapterTest = ProtelisAdapterTest(serverDummy1, serverDummy2, supportServer)
-        localNetworkController = LocalNetworkController(supportServer, serverAddress = address, serverPort =  2001)
-        serverDummy1Controller = LocalNetworkController(serverDummy1, serverAddress = address, serverPort =  2004)
-        serverDummy2Controller = LocalNetworkController(serverDummy2, serverAddress = address, serverPort = 2006)
+        localNetworkController = LocalNetworkController(
+            supportServer,
+            serverAddress = address,
+            serverPort = 2001
+        )
+        serverDummy1Controller = LocalNetworkController(
+            serverDummy1,
+            serverAddress = address,
+            serverPort = 2004
+        )
+        serverDummy2Controller = LocalNetworkController(
+            serverDummy2,
+            serverAddress = address,
+            serverPort = 2006
+        )
 
         // set Server Communication
         localNetworkController.setCommunicationForServer(supportServer)

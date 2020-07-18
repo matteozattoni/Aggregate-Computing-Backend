@@ -27,7 +27,11 @@ internal class ProtelisLocalTest {
     fun connectSupportToLocalNetwork(){
         val factory = DefaultServerFactory()
         serverSupport = SupportDeviceTest(factory.createNewID(), "Server Support", factory = factory)
-        localNetworkController = LocalNetworkController(serverSupport, serverAddress = inetAddress, serverPort = port)
+        localNetworkController = LocalNetworkController(
+            serverSupport,
+            serverAddress = inetAddress,
+            serverPort = port
+        )
         localNetworkController.setCommunicationForServer(serverSupport)
         serverSupport.startServer()
     }

@@ -20,7 +20,11 @@ internal class RemoteToLocalTest {
         "support server",
         factory = factory
     )
-    private val localController = LocalNetworkController(supportServer, serverAddress = InetAddress.getLocalHost(), serverPort = 2001)
+    private val localController = LocalNetworkController(
+        supportServer,
+        serverAddress = InetAddress.getLocalHost(),
+        serverPort = 2001
+    )
 
     private lateinit var server: Device
     private lateinit var device: Device

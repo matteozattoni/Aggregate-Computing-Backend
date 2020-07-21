@@ -2,12 +2,10 @@ package communication.concrete.localipv
 
 import communication.Message
 import communication.MessageType
-import communication.concrete.localipv.LocalNetworkInformation
 import communication.interfaces.NetworkCommunication
 import devices.interfaces.RemoteDevice
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
-import java.lang.Exception
 import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket

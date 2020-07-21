@@ -8,5 +8,5 @@ import devices.interfaces.Device
 interface Adapter {
     val device: Device
 
-    fun execute(): Unit
+    fun execute()
 }

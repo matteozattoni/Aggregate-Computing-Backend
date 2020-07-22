@@ -4,6 +4,9 @@ import org.protelis.lang.datatype.DeviceUID
 import java.io.Serializable
 import java.util.*
 
+/**
+ * Is an implementation of [DeviceUID] where the class [UUID] represent the identity of the device.
+ */
 class ServerUID(private val uuid: UUID): DeviceUID, Comparable<ServerUID>, Serializable {
     constructor(): this(UUID.randomUUID())
 

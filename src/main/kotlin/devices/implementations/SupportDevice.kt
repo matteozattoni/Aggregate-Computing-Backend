@@ -9,6 +9,10 @@ import server.DeviceManager
 import server.interfaces.NetworkInformation
 import server.interfaces.ServerFactory
 
+/**
+ * Extends [PeerDevice], it’s the server class thanks to other [SupportDevice] provide the communication between client
+ * on entire network
+ */
 open class SupportDevice(override val id: DeviceUID, name: String = "Support",
                          override var physicalDevice: NetworkCommunication? = null,
                          private val factory: ServerFactory

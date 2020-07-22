@@ -11,7 +11,9 @@ import server.interfaces.ServerFactory
 import devices.implementations.SupportDevice
 import java.io.Serializable
 
-
+/**
+ * This concrete factory is used if none is specified
+ */
 internal class DefaultServerFactory: ServerFactory {
 
     override fun createNewID(): DeviceUID {

@@ -8,7 +8,10 @@ import devices.interfaces.AbstractDevice
 import devices.interfaces.RemoteDevice
 import org.protelis.lang.datatype.DeviceUID
 
-
+/**
+ * Implements [RemoteDevice], is a Peer that can be reached through its [NetworkCommunication], dispatch the messages
+ * received.
+ */
 open class PeerDevice(
     override val id: DeviceUID,
     name: String = "",

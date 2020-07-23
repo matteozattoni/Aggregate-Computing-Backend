@@ -31,6 +31,12 @@ open class SupportDevice(override val id: DeviceUID, name: String = "Support",
         deviceManager.getHostedDevices().forEach { synchronized(it) { it.execute() } }
     }
 
+    /**
+     * When a client want join the network send a Join message to its SupportDevice, if the message is OfferServer
+     * then means another SupportDevice offer his service to this SupportDevice, if a device want send a message to its
+     * neighbour then send a SendToNeighbour to its SupportDevice, if want change its mode the device send a
+     * GoLightWeight or LeaveLightWeight to its SupportDevice.
+     */
     override fun tell(message: Message) {
         when (message.type) {
             MessageType.Join -> {
@@ -78,6 +84,9 @@ open class SupportDevice(override val id: DeviceUID, name: String = "Support",
         }
     }
 
+    /**
+     * Used when a Device want go or leave the lightweight mode
+     */
     open fun replaceHosted(replace: Device, with: Device) {
         with.status = replace.status
         deviceManager.removeDevice(replace)

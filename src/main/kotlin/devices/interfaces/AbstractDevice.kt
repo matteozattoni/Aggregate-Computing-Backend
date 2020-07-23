@@ -10,6 +10,10 @@ abstract class AbstractDevice(override val id: DeviceUID,
                               private val onResult: (Serializable) -> Any) : Device {
     override var status: MutableSet<Message> = mutableSetOf()
 
+    /**
+     * Remove old results from same device, add new result, show the result and execute the program
+     * @param message the incoming message, manage the Status, Result, Show and Execute message types
+     */
     override fun tell(message: Message) {
         when(message.type){
             MessageType.Status,

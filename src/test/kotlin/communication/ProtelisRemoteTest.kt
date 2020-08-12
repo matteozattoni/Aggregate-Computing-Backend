@@ -150,7 +150,7 @@ internal class ProtelisRemoteTest {
         }
 
         fun readFromRaw() : String {
-            val bufferedReader = File("D:\\Matteo\\Documenti\\GitHub repo\\Aggregate-Computing-Client\\app\\src\\main\\res\\raw\\hello.pt").bufferedReader()
+            val bufferedReader = File("src/test/resources/hello.pt").bufferedReader()
             return bufferedReader.readText()
         }
 
